@@ -1,2 +1,3 @@
 # newcommerce
-Ecommerce admin platform maked by CodeIgniter(PHP), AngularJs and MongoDB
+Admin e-commerce platform build on CodeIgniter(PHP), AngularJs and MongoDB
+Api build on NodeJS (Express and Mongoose)
