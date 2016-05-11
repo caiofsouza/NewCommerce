@@ -3,6 +3,7 @@
 {
 	name: string,
 	code: string,
+	description: string,
 	skus: [ 
 		{
 			sku_id: string,
@@ -21,7 +22,17 @@
 			],
 		}
 	],
+	rating: [
+		{
+			user_id: ObjectId,
+			stars: int,
+			comment: string,
+			date: dateTime
+		}
+	],
+	tags: [ string ],
 	categories: [ ObjectId ],
+	related_products: [ ObjectId ],
 	onMarketPlace: boolean,
 	active: boolean,
 	created_at: dateTime
@@ -45,6 +56,7 @@
 {
 	name: string,
 	products: [ ObjectId ],
+	cover_img: string,
 	created_at: dateTime
 }
 
@@ -66,6 +78,12 @@
 			city: string,
 			state: string,
 			country: string
+		}
+	],
+	favorities: [
+		{
+			product_id: ObjectId,
+			path_name: string
 		}
 	],
 	active: boolean,
