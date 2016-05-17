@@ -30,7 +30,7 @@ http.createServer(function(request, response) {
 				return;
 			}
 
-			response.writeHead(200, {'Content-Type': contentType});
+			response.writeHead(200, {'Content-Type': 'text/plain'});
 			response.write(file);
 			response.end();
 		});
