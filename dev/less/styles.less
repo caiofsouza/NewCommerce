@@ -1,11 +1,135 @@
+@light_blue: #F9F7FF;
+@red_error: #F93636;
+@feature_color: #F38F48;
+@border_gray: #CECECE;
+
+*{
+	margin:0px;
+	padding:0px;
+	box-sizing: border-box;
+	font-family: 'Roboto', sans-serif;
+	outline:none;
+}
+body{
+    background-color: @light_blue;
+}
+.form-group{
+	margin-bottom: 15px;
+
+	label{
+	    font-size: 16px;
+	    width: 100%;
+	    display: block;
+	    margin-bottom: 7px;
+	    color: #121212;
+	    text-align: left;
+	    font-weight: 300;
+	}
+	input[type="text"], input[type="password"], input[type="email"]{
+		width: 100%;
+	    height: 35px;
+	    border-radius: 4px;
+	    border: 2px solid @border_gray;
+	    padding-left: 11px;
+	    font-size: 15px;
+	    outline: none;
+	}
+	.message-error{
+	    font-size: 15px;
+	    color: #464646;
+	    font-weight: 600;
+	}
+}
+
+.form-group.error_input{
+	label, span{
+		color:@red_error;
+	}
+	input[type="text"], input[type="password"], input[type="email"]{
+	    border: 2px solid @red_error;
+	}
+}
+
+.card-conteiner{
+    background-color: #ffffff;
+    text-align: center;
+    box-shadow: 1px 1px 4px 1.5px #C5C5C5;
+}
+
+.text-center{
+	text-align: center;
+}
+.text-left{
+	text-align: left;
+}
+.text-right{
+	text-align: right;
+}
+
 #header-top{
 	width:100%;
 	height:70px;
 	background-color:#e7e7e7;
 
+	ul{
+		float: right;
+	}
 
-	li{
-		color:red;	
+}
+
+.form-login{
+	margin-top: 20%;
+    width: 360px;
+    height: 370px;
+    display: inline-block;
+    padding: 35px 20px;
+    position:relative;
+
+    .header{
+
+    	h2{
+			font-size: 24px;
+		    display: -webkit-inline-box;
+		    padding: 0px 12px;
+		    z-index: 132;
+		    position: relative;
+		    background-color: #ffffff;
+		    margin-bottom: 25px;
+		    color: #808080;
+    	}
+
+	    .line-after{
+	    	content: "";
+		    width: 80%;
+		    height: 3px;
+		    background-color: @border_gray;
+		    position: absolute;
+		    left: 10%;
+		    z-index: 1;
+		    top: 48px;
+	    }
+
+    }
+
+
+    button{
+		background-color: @feature_color;
+		height:40px;
+		border-radius:3px;
+		color: #ffffff;
+		width: 170px;
+	    font-size: 16px;
+	    margin-top: 20px;
+	    border: 2px solid @feature_color;
+	    cursor: pointer;
+	    position: absolute;
+	    left: ~"calc(50% - 85px)";
+	    bottom: 35px;
+	}
+
+	button:hover{
+		background-color:#ffffff;
+		color:@feature_color;
 	}
 }
 

@@ -1,34 +1,27 @@
 <!DOCTYPE html>
-<html ng-app="NewCommerce">
+<html>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>NewCommerce</title>
-	<link rel="stylesheet" href="">
-	<script src='public/js/angular.min.js' type="text/javascript"></script>
-	<script src='public/js/jquery-2.2.3.min.js' type="text/javascript"></script>
-	<script src='public/js/app.min.js' type="text/javascript"></script>
-</head>
-<body>
-	<header ng-controller="MenuCtrl" id="header-top">
-	{{hello}}
-		<ul>
-			<li><a href="#"></a></li>
-			<li><a href="#"></a></li>
-			<li><a href="#"></a></li>
-			<li><a href="#"></a></li>
-			<li><a href="#"></a></li>
-			<li><a href="#"></a></li>
-		</ul>
-	</header>
-	<div class="sidebar" ng-controller="SidebarCtrl">
-	{{hello}}
-		
-	</div>
-
-	<div ng-controller="DashboardCtrl">
-	{{hello}}
+	<title>NewCommerce Admin</title>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,300italic,900' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="/public/css/styles.css">
 	
+
+	<script src="/public/js/angular.min.js" type="text/javascript"></script>
+	<script src="/public/js/angular-route.min.js" type="text/javascript"></script>
+	<script src="/public/js/jquery-2.2.3.min.js" type="text/javascript"></script>
+	<script src="/public/js/app.min.js" type="text/javascript"></script>
+
+	<base href="/">
+
+
+</head>
+<body ng-app="newCommerce">
+	<div ng-view>
 	</div>
+</div>
+
+
 </body>
 </html>

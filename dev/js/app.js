@@ -1,13 +1,23 @@
-var app = angular.module('NewCommerce', []);
+'use strict';
 
-app.controller('MenuCtrl', ['$scope', function($scope){
-	$scope.hello = "menu ctrl";
+var app = angular.module('newCommerce', ['ngRoute']);
+
+app.config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider){
+    // $locationProvider.html5Mode(true);
+
+	$routeProvider
+        .when('/', {
+            templateUrl : 'public/views/login.html',
+            controller  : 'LoginCtrl'
+        })
+        .when('/products', {
+            templateUrl : 'public/views/products.html',
+            controller  : 'ProductsCtrl'
+        })
+        .when('/product/:product_id', {
+            templateUrl : 'public/views/product.html',
+            controller  : 'ProductCtrl'
+        })
+        .otherwise({ redirectTo: '/' });
 }]);
 
-app.controller('SidebarCtrl', ['$scope', function($scope){
-	$scope.hello = 'sidebar ctrl';
-}]);
-
-app.controller('DashboardCtrl', ['$scope', function($scope){
-	$scope.hello = 'dash ctrl';
-}]);
