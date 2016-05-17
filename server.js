@@ -6,9 +6,23 @@ var http = require("http"),
 	port = process.argv[2] || 8888;
 
 http.createServer(function(request, response) {
+	var contentType;
 
-		var uri = url.parse(request.url).pathname,
-	    filename = path.join(process.cwd(), uri);
+	if(request.url.indexOf('.html') != -1){
+		contentType = 'text/html';
+	}
+
+	if(request.url.indexOf('.js') != -1){
+		contentType = 'text/javascript';
+	}
+
+	if(request.url.indexOf('.css') != -1){
+		contentType = 'text/css';
+	}
+
+
+	var uri = url.parse(request.url).pathname,
+    filename = path.join(process.cwd(), uri);
 
 	fs.exists(filename, function(exists) {
 
@@ -30,7 +44,7 @@ http.createServer(function(request, response) {
 				return;
 			}
 
-			response.writeHead(200, {'Content-Type': 'text/html'});
+			response.writeHead(200, {'Content-Type': contentType});
 			response.write(file);
 			response.end();
 		});
