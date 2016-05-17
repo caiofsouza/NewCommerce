@@ -7,9 +7,7 @@ var http = require("http"),
 
 http.createServer(function(request, response) {
 
-	request.get('js/angular.min.js').pipe(request.put('localhost:8000/public/js/angular.min.js'));
-
-	var uri = url.parse(request.url).pathname,
+		var uri = url.parse(request.url).pathname,
 	    filename = path.join(process.cwd(), uri);
 
 	path.exists(filename, function(exists) {
