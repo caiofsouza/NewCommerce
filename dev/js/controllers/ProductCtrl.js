@@ -1,4 +1,4 @@
-app.controller('ProductCtrl', ['$scope', '$routeParams', function($scope, $routeParams){
-	$scope.product_id = $routeParams.product_id;
-	$scope.message = "Product page";
+app.controller('ProductCtrl', [ '$routeParams', function($routeParams){
+	this.product_id = $routeParams.product_id;
+	this.message = "Product page";
 }]);

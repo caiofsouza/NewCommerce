@@ -8,6 +8,12 @@
 body {
   background-color: #F9F7FF;
 }
+#main {
+  position: absolute;
+  min-height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
 .form-group {
   margin-bottom: 15px;
 }
@@ -68,7 +74,7 @@ body {
   float: right;
 }
 .form-login {
-  margin-top: 20%;
+  margin-top: 160px;
   width: 360px;
   height: 370px;
   display: inline-block;

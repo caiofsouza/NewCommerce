@@ -1,5 +1,5 @@
-app.controller('HomeCtrl', ['$scope', function($scope){
+app.controller('HomeCtrl', [function(){
 
-	$scope.message = 'teste';
+	this.message = 'teste';
 	
 }]);

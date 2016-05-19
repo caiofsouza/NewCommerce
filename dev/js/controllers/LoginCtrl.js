@@ -1,30 +1,33 @@
-app.controller('LoginCtrl', ['$scope', '$location', 'Auth', function($scope, $location, Auth){
+app.controller('LoginCtrl', ['$location', 'Auth', '$http', '$window', function($location, Auth, $http, $window){
 	
-	$scope.user_email = "";
-	$scope.user_password = "";
+	console.log("token1: "+$window.sessionStorage.token);
 
-	$scope.auth = new Auth();
+	this.user_email = "";
+	this.user_password = "";
 
-	$scope.user_login = function(){
-		$scope.auth.checkUser({});
+	this.auth = new Auth();
 
-		$scope.messageError = "";
+	this.user_login = function(){
+		this.auth.checkUser({username: this.user_email, password: this.user_password });
+
+
+		this.messageError = "";
 		
-		if($scope.user_email != "" && $scope.user_password != ""){
+		if(this.user_email != "" && this.user_password != ""){
 
-			$scope.email_error = $scope.pass_error = false;
+			this.email_error = this.pass_error = false;
 
 		}else{
-			if($scope.user_email == ""){
-				$scope.email_error = true;
-				$scope.messageError = "Preencha o campo de email";
+			if(this.user_email == ""){
+				this.email_error = true;
+				this.messageError = "Preencha o campo de email";
 			}else{
-				$scope.pass_error = true;
-				$scope.messageError = "Preencha o campo de senha";
+				this.pass_error = true;
+				this.messageError = "Preencha o campo de senha";
 			}
 		}
 
-		$location.path( "/product/123456" );
+		// $location.path( "/product/123456" );
 	};
 
 }]);

@@ -2,11 +2,11 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 		clean: {
-            build: {
-                dot: true,
-                src: [ 'dev/js/all_app.js', 'dev/views/all.html', 'public/views/' ]
-            }
-        },
+			build: {
+				dot: true,
+				src: [ 'dev/js/all_app.js', 'dev/views/all.html', 'public/views/' ]
+			}
+		},
 		concat: {
 			js: {
 				src: ['dev/js/app.js', 'dev/js/controllers/*.js', 'dev/js/models/*.js'],
@@ -62,6 +62,17 @@ module.exports = function(grunt) {
 				dest: 'public/views/',
 				expand: true 
 			}
+		},
+		cssmin: {
+			options: {
+				shorthandCompacting: false,
+				roundingPrecision: -1
+			},
+			target: {
+				files: {
+					'public/css/normalize.min.css': ['node_modules/normalize.css/normalize.css']
+				}
+			}
 		}
 	});
 
@@ -72,7 +83,16 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
 
 	// Register the default task.
-	grunt.registerTask("default", [ "clean", "concat", "uglify", "less", "copy", "watch"]);
+	grunt.registerTask("default", [ 
+		"clean", 
+		"concat", 
+		"uglify", 
+		"less", 
+		"copy", 
+		"cssmin", 
+		"watch"
+	]);
 };

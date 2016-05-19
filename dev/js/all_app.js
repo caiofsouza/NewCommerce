@@ -22,71 +22,84 @@ app.config(['$locationProvider', '$routeProvider', function($locationProvider, $
 }]);
 
 
-app.controller('HomeCtrl', ['$scope', function($scope){
+app.controller('HomeCtrl', [function(){
 
-	$scope.message = 'teste';
+	this.message = 'teste';
 	
 }]);
-app.controller('LoginCtrl', ['$scope', '$location', 'Auth', function($scope, $location, Auth){
+app.controller('LoginCtrl', ['$location', 'Auth', '$http', '$window', function($location, Auth, $http, $window){
 	
-	$scope.user_email = "";
-	$scope.user_password = "";
+	console.log("token1: "+$window.sessionStorage.token);
 
-	$scope.auth = new Auth();
+	this.user_email = "";
+	this.user_password = "";
 
-	$scope.user_login = function(){
-		$scope.auth.checkUser({});
+	this.auth = new Auth();
 
-		$scope.messageError = "";
+	this.user_login = function(){
+		this.auth.checkUser({username: this.user_email, password: this.user_password });
+
+
+		this.messageError = "";
 		
-		if($scope.user_email != "" && $scope.user_password != ""){
+		if(this.user_email != "" && this.user_password != ""){
 
-			$scope.email_error = $scope.pass_error = false;
+			this.email_error = this.pass_error = false;
 
 		}else{
-			if($scope.user_email == ""){
-				$scope.email_error = true;
-				$scope.messageError = "Preencha o campo de email";
+			if(this.user_email == ""){
+				this.email_error = true;
+				this.messageError = "Preencha o campo de email";
 			}else{
-				$scope.pass_error = true;
-				$scope.messageError = "Preencha o campo de senha";
+				this.pass_error = true;
+				this.messageError = "Preencha o campo de senha";
 			}
 		}
 
-		$location.path( "/product/123456" );
+		// $location.path( "/product/123456" );
 	};
 
 }]);
-app.controller('MenuCtrl', ['$scope', function($scope){
-	$scope.user = {
+app.controller('MenuCtrl', [function($scope){
+	this.user = {
 		name: "Caio Fernandes",
 		email: "caio_fsouza@hotmail.com",
 		active: true
 	};
 }]);
-app.controller('ProductCtrl', ['$scope', '$routeParams', function($scope, $routeParams){
-	$scope.product_id = $routeParams.product_id;
-	$scope.message = "Product page";
+app.controller('ProductCtrl', [ '$routeParams', function($routeParams){
+	this.product_id = $routeParams.product_id;
+	this.message = "Product page";
 }]);
-app.factory('Auth', ['$http', function($http) {  
+app.factory('Auth', ['$http', '$window', function($http, $window) {  
+
     function Auth(){
-        this.id = '12345';
+        this.token = '';
+
     };
 
     Auth.prototype = {
         checkUser: function(user_obj) {
             $http({
-                method: "GET",
-                data: { 
-                    'email' : user_obj.email, 
-                    'password': user_obj.pass 
+                method: 'POST',
+                url: 'http://localhost:3000/api/login/',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                transformRequest: function(obj) {
+                    var str = [];
+                    for(var p in obj)
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    return str.join("&");
                 },
-                url: 'http://localhost:3000/'
-            }).success(function(data){
-                console.log(data);
-                app.constant('AuthTOKEN', data.token);
-            }).error(function(data){
-                console.log(data);
+                data:{
+                    username: user_obj.username,
+                    password: user_obj.password
+                }
+            }).then(function successCallback(response) {
+                // save token in session
+                $window.sessionStorage.token = response.data.token;
+
+            }, function errorCallback(response) {
+                console.log("Error:", response);
             });
         }
     };

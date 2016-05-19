@@ -1,22 +1,32 @@
-app.factory('Auth', ['$http', function($http) {  
+app.factory('Auth', ['$http', '$window', function($http, $window) {  
+
     function Auth(){
-        this.id = '12345';
+        this.token = '';
+
     };
 
     Auth.prototype = {
         checkUser: function(user_obj) {
             $http({
-                method: "GET",
-                data: { 
-                    'email' : user_obj.email, 
-                    'password': user_obj.pass 
+                method: 'POST',
+                url: 'http://localhost:3000/api/login/',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                transformRequest: function(obj) {
+                    var str = [];
+                    for(var p in obj)
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    return str.join("&");
                 },
-                url: 'http://localhost:3000/'
-            }).success(function(data){
-                console.log(data);
-                app.constant('AuthTOKEN', data.token);
-            }).error(function(data){
-                console.log(data);
+                data:{
+                    username: user_obj.username,
+                    password: user_obj.password
+                }
+            }).then(function successCallback(response) {
+                // save token in session
+                $window.sessionStorage.token = response.data.token;
+
+            }, function errorCallback(response) {
+                console.log("Error:", response);
             });
         }
     };

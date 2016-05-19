@@ -1,19 +1,19 @@
-<div ng-controller="LoginCtrl" class='text-center'>
-	<form ng-submit="user_login();" class="card-conteiner form-login">
+<div ng-controller="LoginCtrl as login" class='text-center'>
+	<form ng-submit="login.user_login();" class="card-conteiner form-login">
 		<div class="header">
 			<h2>Login</h2>
 			<div class="line-after"></div>
 		</div>
-		<div class="form-group" ng-class="{ error_input: email_error}">
+		<div class="form-group" ng-class="{ error_input: login.email_error}">
 			<label for="">Email</label>
-			<input type="text" ng-model="user_email" placeholder="Email">
+			<input type="text" ng-model="login.user_email" placeholder="Email">
 		</div>
-		<div class="form-group" ng-class="{ error_input: pass_error}">
+		<div class="form-group" ng-class="{ error_input: login.pass_error}">
 			<label for="">Senha</label>
-			<input type="password" ng-model="user_password" placeholder="Senha">
+			<input type="password" ng-model="login.user_password" placeholder="Senha">
 		</div>
 		<div class="form-group">
-			<span class='message-error' ng-bind="messageError"></span>
+			<span class='message-error' ng-bind="login.messageError"></span>
 		</div>
 		<button type="submit">Entrar</button>
 	</form>
