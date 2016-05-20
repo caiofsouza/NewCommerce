@@ -26,7 +26,7 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                 }
             }).then(function successCallback(response) {
                 // save token in session
-                $cookies = response.data;
+                $cookies.put('api_auth', response.data);
                 app.run(['$http', function ($http) {
                     $http.defaults.headers.common['x-access-token'] = response.data.token;
                 }]);
