@@ -27,10 +27,18 @@ http.createServer(function(request, response) {
 	fs.exists(filename, function(exists) {
 
 		if(!exists) {
-			response.writeHead(404, {"Content-Type": "text/plain"});
-			response.write("404 Not Found\n");
-			response.end();
-			return;
+			fs.readFile('public/index.html', "binary", function(err, file) {
+				if(err) {        
+					response.writeHead(500, {"Content-Type": "text/plain"});
+					response.write(err + "\n");
+					response.end();
+					return;
+				}
+
+				response.writeHead(200, {'Content-Type': 'text/html'});
+				response.write(file);
+				response.end();
+			});
 		}
 
 		if (fs.statSync(filename).isDirectory()) filename += 'public/index.html';

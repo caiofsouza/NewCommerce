@@ -1,21 +1,32 @@
-app.controller('LoginCtrl', ['$location', 'Auth', '$http', '$window', function($location, Auth, $http, $window){
+app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, Auth, $http){
 	
-	console.log("token1: "+$window.sessionStorage.token);
-
 	this.user_email = "";
 	this.user_password = "";
-
 	this.auth = new Auth();
 
 	this.user_login = function(){
-		this.auth.checkUser({username: this.user_email, password: this.user_password });
-
-
 		this.messageError = "";
 		
 		if(this.user_email != "" && this.user_password != ""){
-
 			this.email_error = this.pass_error = false;
+
+			var user_obj = {
+						username: this.user_email, 
+						password: this.user_password 
+					};
+
+
+			this.auth.loginUser(user_obj, function(result){
+				console.log("resultado: "+ result);
+
+				if(result == true){
+					// logged 
+					$location.path( "/home" );
+				}else{
+					// user or pass wrong
+					this.messageError = 'Usuário ou senha incorretos!';
+				}
+			});
 
 		}else{
 			if(this.user_email == ""){
@@ -27,7 +38,6 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', '$window', function($
 			}
 		}
 
-		// $location.path( "/product/123456" );
 	};
 
 }]);

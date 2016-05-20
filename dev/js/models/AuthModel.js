@@ -1,4 +1,5 @@
-app.factory('Auth', ['$http', '$window', function($http, $window) {  
+app.factory('Auth', ['$http', '$location', '$cookies',
+    function($http, $location, $cookies) {  
 
     function Auth(){
         this.token = '';
@@ -6,10 +7,12 @@ app.factory('Auth', ['$http', '$window', function($http, $window) {
     };
 
     Auth.prototype = {
-        checkUser: function(user_obj) {
+        loginUser: function(user_obj, callback) {
+            var response;
+
             $http({
                 method: 'POST',
-                url: 'http://localhost:3000/api/login/',
+                url: API_HOST+'login/',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transformRequest: function(obj) {
                     var str = [];
@@ -23,11 +26,18 @@ app.factory('Auth', ['$http', '$window', function($http, $window) {
                 }
             }).then(function successCallback(response) {
                 // save token in session
-                $window.sessionStorage.token = response.data.token;
+                $cookies = response.data;
+                app.run(['$http', function ($http) {
+                    $http.defaults.headers.common['x-access-token'] = response.data.token;
+                }]);
+
+                return true;
 
             }, function errorCallback(response) {
-                console.log("Error:", response);
+
+                return false;
             });
+
         }
     };
 

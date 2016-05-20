@@ -18,21 +18,24 @@ module.exports = function(req, res) {
             password: 123
         };
 
-        //3
+        
         var expires = moment().add(7, 'days').valueOf();
         var token = jwt.encode({
             iss: user.id,
             exp: expires
         }, segredo);
-        //4
-        return res.status(200).json({
+
+        
+        return res.status(200).send({
             token: token,
             expires: expires,
             user: user
         });
         
     }else{
+
         return res.status(401).send({error: 'Dados incorretos!'});
+
     }
 
 

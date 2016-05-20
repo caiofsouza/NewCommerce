@@ -35,6 +35,9 @@ module.exports = function(grunt) {
 		    }
 		},
 		uglify: {
+			options: {
+	            mangle: false
+	        },
 			build: {
 				src: 'dev/js/all_app.js',
 				dest: 'public/js/app.min.js'
@@ -93,6 +96,7 @@ module.exports = function(grunt) {
 		"less", 
 		"copy", 
 		"cssmin", 
-		"watch"
 	]);
+
+
 };

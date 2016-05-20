@@ -1,25 +1,59 @@
 'use strict';
 
-var app = angular.module('newCommerce', ['ngRoute']);
+var API_HOST = 'http://localhost:3000/api/';
+var app = angular.module('newCommerce', ['ui.router', 'ngCookies']);
 
-app.config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider){
-    // $locationProvider.html5Mode(true);
+app.config(['$stateProvider', '$urlRouterProvider',
+    function($stateProvider, $urlRouterProvider){
 
-	$routeProvider
-        .when('/', {
-            templateUrl : 'public/views/login.html',
-            controller  : 'LoginCtrl'
-        })
-        .when('/products', {
-            templateUrl : 'public/views/products.html',
-            controller  : 'ProductsCtrl'
-        })
-        .when('/product/:product_id', {
-            templateUrl : 'public/views/product.html',
-            controller  : 'ProductCtrl'
-        })
-        .otherwise({ redirectTo: '/' });
+
+    $stateProvider
+    .state('login', {
+        url: "/login",
+        templateUrl: "public/views/login.html",
+        data: {
+            requireToken: false
+        }
+    })
+    .state('home', {
+        url: "/home",
+        templateUrl: "public/views/home.html",
+        data: {
+            requireToken: true
+        }
+    });
+
+    $urlRouterProvider.otherwise('/home');
+
 }]);
+
+app.run(['$rootScope','$state', '$cookies',
+    function($rootScope, $state, $cookies) {
+
+        $rootScope.$on("$stateChangeStart", function (event, toState, toParams) { 
+
+            // get the json obj session
+            var session_obj = $cookies.get('api_auth') != undefined ? $cookies.get('api_auth') : null;
+            var token = session_obj != null ? session_obj.token : null;
+
+            var requireToken = toState.data.requireToken;
+
+            console.log(session_obj, toState, token);
+
+            // check if the view need token
+            if(requireToken && ( token == undefined || token == null || token == "") ){
+                event.preventDefault();
+                console.log("IF1");
+                $state.go("login");
+            }else if(toState.name == 'login' && token != undefined){
+                console.log("ESLE2");
+                $state.go("home");
+            }
+            
+        });
+
+    }
+]);
 
 
 app.controller('HomeCtrl', [function(){
@@ -27,24 +61,35 @@ app.controller('HomeCtrl', [function(){
 	this.message = 'teste';
 	
 }]);
-app.controller('LoginCtrl', ['$location', 'Auth', '$http', '$window', function($location, Auth, $http, $window){
+app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, Auth, $http){
 	
-	console.log("token1: "+$window.sessionStorage.token);
-
 	this.user_email = "";
 	this.user_password = "";
-
 	this.auth = new Auth();
 
 	this.user_login = function(){
-		this.auth.checkUser({username: this.user_email, password: this.user_password });
-
-
 		this.messageError = "";
 		
 		if(this.user_email != "" && this.user_password != ""){
-
 			this.email_error = this.pass_error = false;
+
+			var user_obj = {
+						username: this.user_email, 
+						password: this.user_password 
+					};
+
+
+			this.auth.loginUser(user_obj, function(result){
+				console.log("resultado: "+ result);
+
+				if(result == true){
+					// logged 
+					$location.path( "/home" );
+				}else{
+					// user or pass wrong
+					this.messageError = 'Usuário ou senha incorretos!';
+				}
+			});
 
 		}else{
 			if(this.user_email == ""){
@@ -56,7 +101,6 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', '$window', function($
 			}
 		}
 
-		// $location.path( "/product/123456" );
 	};
 
 }]);
@@ -71,7 +115,8 @@ app.controller('ProductCtrl', [ '$routeParams', function($routeParams){
 	this.product_id = $routeParams.product_id;
 	this.message = "Product page";
 }]);
-app.factory('Auth', ['$http', '$window', function($http, $window) {  
+app.factory('Auth', ['$http', '$location', '$cookies',
+    function($http, $location, $cookies) {  
 
     function Auth(){
         this.token = '';
@@ -79,10 +124,12 @@ app.factory('Auth', ['$http', '$window', function($http, $window) {
     };
 
     Auth.prototype = {
-        checkUser: function(user_obj) {
+        loginUser: function(user_obj, callback) {
+            var response;
+
             $http({
                 method: 'POST',
-                url: 'http://localhost:3000/api/login/',
+                url: API_HOST+'login/',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transformRequest: function(obj) {
                     var str = [];
@@ -96,11 +143,18 @@ app.factory('Auth', ['$http', '$window', function($http, $window) {
                 }
             }).then(function successCallback(response) {
                 // save token in session
-                $window.sessionStorage.token = response.data.token;
+                $cookies = response.data;
+                app.run(['$http', function ($http) {
+                    $http.defaults.headers.common['x-access-token'] = response.data.token;
+                }]);
+
+                return true;
 
             }, function errorCallback(response) {
-                console.log("Error:", response);
+
+                return false;
             });
+
         }
     };
 
