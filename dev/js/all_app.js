@@ -1,56 +1,41 @@
 'use strict';
 
 var API_HOST = 'http://localhost:3000/api/';
-var app = angular.module('newCommerce', ['ui.router', 'ngCookies']);
+var app = angular.module('newCommerce', ['ngRoute', 'ngCookies']);
 
-app.config(['$stateProvider', '$urlRouterProvider',
-    function($stateProvider, $urlRouterProvider){
+app.config(['$locationProvider', '$routeProvider',
+    function($locationProvider, $routeProvider){
 
 
-    $stateProvider
-    .state('login', {
-        url: "/login",
-        templateUrl: "public/views/login.html",
-        data: {
-            requireToken: false
-        }
-    })
-    .state('home', {
-        url: "/home",
-        templateUrl: "public/views/home.html",
-        data: {
-            requireToken: true
-        }
-    });
+    $routeProvider
+        .when('/', {
+            templateUrl: 'views/login.html',
+            controller: 'LoginCtrl'
+        })
+        .when('/home', {
+            templateUrl: 'views/home.html',
+            controller: 'LoginCtrl'
+        })
+        .when('/Product', {
+            templateUrl: 'views/product.html',
+            controller: 'ProductCtrl'
+        });
 
-    $urlRouterProvider.otherwise('/home');
+    $routeProvider.otherwise({ redirectTo: '/' });
+    $locationProvider.html5Mode(true);
 
 }]);
 
-app.run(['$rootScope','$state', '$cookies',
-    function($rootScope, $state, $cookies) {
+app.run(['$rootScope','$cookies', '$q',
+    function($rootScope, $cookies, $q) {
 
-        $rootScope.$on("$stateChangeStart", function (event, toState, toParams) { 
+        // get the json obj session
+        var session_obj = JSON.parse($cookies.get('api_auth')) != undefined ? 
+        JSON.parse($cookies.get('api_auth')) : null;
 
-            // get the json obj session
-            var session_obj = $cookies.get('api_auth') != undefined ? $cookies.get('api_auth') : null;
-            var token = session_obj != null ? session_obj.token : null;
+        var token = session_obj != null ? session_obj.token : null;
 
-            var requireToken = toState.data.requireToken;
-
-            console.log(session_obj, toState, token);
-
-            // check if the view need token
-            if(requireToken && ( token == undefined || token == null || token == "") ){
-                event.preventDefault();
-                console.log("IF1");
-                $state.go("login");
-            }else if(toState.name == 'login' && token != undefined){
-                console.log("ESLE2");
-                $state.go("home");
-            }
-            
-        });
+        console.log(session_obj, token);
 
     }
 ]);
@@ -62,42 +47,40 @@ app.controller('HomeCtrl', [function(){
 	
 }]);
 app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, Auth, $http){
-	
-	this.user_email = "";
-	this.user_password = "";
-	this.auth = new Auth();
+	var self = this;
 
-	this.user_login = function(){
-		this.messageError = "";
+	self.user_email = "";
+	self.user_password = "";
+	self.auth = new Auth();
+
+	self.user_login = function(){
+		self.messageError = "";
 		
-		if(this.user_email != "" && this.user_password != ""){
-			this.email_error = this.pass_error = false;
+		if(self.user_email != "" && self.user_password != ""){
+			self.email_error = self.pass_error = false;
 
 			var user_obj = {
-						username: this.user_email, 
-						password: this.user_password 
-					};
+				username: self.user_email, 
+				password: self.user_password 
+			};
 
 
-			this.auth.loginUser(user_obj, function(result){
-				console.log("resultado: "+ result);
-
+			self.auth.loginUser(user_obj, function(result){
+				console.log("resultado: "+result);
 				if(result == true){
-					// logged 
-					$location.path( "/home" );
+					$location.path( '/home' );
 				}else{
-					// user or pass wrong
-					this.messageError = 'Usuário ou senha incorretos!';
+					self.messageError = "Usuário ou senha incorretos!";
 				}
-			});
+			});	
 
 		}else{
-			if(this.user_email == ""){
-				this.email_error = true;
-				this.messageError = "Preencha o campo de email";
+			if(self.user_email == ""){
+				self.email_error = true;
+				result_msg = "Preencha o campo de email";
 			}else{
-				this.pass_error = true;
-				this.messageError = "Preencha o campo de senha";
+				self.pass_error = true;
+				result_msg = "Preencha o campo de senha";
 			}
 		}
 
@@ -124,7 +107,7 @@ app.factory('Auth', ['$http', '$location', '$cookies',
     };
 
     Auth.prototype = {
-        loginUser: function(user_obj, callback) {
+        loginUser: function(user_obj, fncallback) {
             var response;
 
             $http({
@@ -143,16 +126,20 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                 }
             }).then(function successCallback(response) {
                 // save token in session
-                $cookies.put('api_auth', response.data);
+                $cookies.put('api_auth', JSON.stringify(response.data));
                 app.run(['$http', function ($http) {
                     $http.defaults.headers.common['x-access-token'] = response.data.token;
                 }]);
 
-                return true;
+                if(fncallback != undefined){
+                    fncallback(true);
+                }
 
             }, function errorCallback(response) {
 
-                return false;
+                if(fncallback != undefined){
+                    fncallback(false);
+                }
             });
 
         }

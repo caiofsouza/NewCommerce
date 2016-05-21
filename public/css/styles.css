@@ -115,7 +115,9 @@ body {
   left: calc(50% - 85px);
   bottom: 35px;
 }
-.form-login button:hover {
+.form-login button:hover,
+.form-login button:focus,
+.form-login button:active {
   background-color: #ffffff;
   color: #F38F48;
 }

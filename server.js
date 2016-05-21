@@ -1,63 +1,28 @@
-var http = require("http"),
-	request = require('request'),
-	url = require("url"),
-	path = require("path"),
-	fs = require("fs")
-	port = process.argv[2] || 8888;
+var express = require('express');
+var bodyParser = require('body-parser');
 
-http.createServer(function(request, response) {
-	var contentType;
+var app = express();
 
-	if(request.url.indexOf('.html') != -1){
-		contentType = 'text/html';
-	}
+app.set('port', (process.env.PORT || 8000));
+app.use(express.static(__dirname + '/public'));
+app.set('views', __dirname + '/public/views');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
-	if(request.url.indexOf('.js') != -1){
-		contentType = 'text/javascript';
-	}
+app.use(bodyParser.urlencoded({		
+  	extended: true
+}));
 
-	if(request.url.indexOf('.css') != -1){
-		contentType = 'text/css';
-	}
+app.use(bodyParser.json());
 
+app.use('/js', express.static(__dirname + '/js'));
+app.use('/views', express.static(__dirname + '/../dist'));
+app.use('/css', express.static(__dirname + '/css'));
 
-	var uri = url.parse(request.url).pathname,
-    filename = path.join(process.cwd(), uri);
+app.get( '*', function( req, res ) {
+    res.sendFile( __dirname + '/public/index.html' );
+} );
 
-	fs.exists(filename, function(exists) {
-
-		if(!exists) {
-			fs.readFile('public/index.html', "binary", function(err, file) {
-				if(err) {        
-					response.writeHead(500, {"Content-Type": "text/plain"});
-					response.write(err + "\n");
-					response.end();
-					return;
-				}
-
-				response.writeHead(200, {'Content-Type': 'text/html'});
-				response.write(file);
-				response.end();
-			});
-		}
-
-		if (fs.statSync(filename).isDirectory()) filename += 'public/index.html';
-
-
-		fs.readFile(filename, "binary", function(err, file) {
-			if(err) {        
-				response.writeHead(500, {"Content-Type": "text/plain"});
-				response.write(err + "\n");
-				response.end();
-				return;
-			}
-
-			response.writeHead(200, {'Content-Type': contentType});
-			response.write(file);
-			response.end();
-		});
-
-	});
-
-
-}).listen(8000);
+app.listen(app.get('port'), function() {
+	console.log("listen 8000!");
+});

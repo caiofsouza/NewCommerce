@@ -7,7 +7,7 @@ app.factory('Auth', ['$http', '$location', '$cookies',
     };
 
     Auth.prototype = {
-        loginUser: function(user_obj, callback) {
+        loginUser: function(user_obj, fncallback) {
             var response;
 
             $http({
@@ -26,16 +26,20 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                 }
             }).then(function successCallback(response) {
                 // save token in session
-                $cookies.put('api_auth', response.data);
+                $cookies.put('api_auth', JSON.stringify(response.data));
                 app.run(['$http', function ($http) {
                     $http.defaults.headers.common['x-access-token'] = response.data.token;
                 }]);
 
-                return true;
+                if(fncallback != undefined){
+                    fncallback(true);
+                }
 
             }, function errorCallback(response) {
 
-                return false;
+                if(fncallback != undefined){
+                    fncallback(false);
+                }
             });
 
         }

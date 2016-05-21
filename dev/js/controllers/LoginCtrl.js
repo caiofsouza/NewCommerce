@@ -1,40 +1,38 @@
 app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, Auth, $http){
-	
-	this.user_email = "";
-	this.user_password = "";
-	this.auth = new Auth();
+	var self = this;
 
-	this.user_login = function(){
-		this.messageError = "";
+	self.user_email = "";
+	self.user_password = "";
+	self.auth = new Auth();
+
+	self.user_login = function(){
+		self.messageError = "";
 		
-		if(this.user_email != "" && this.user_password != ""){
-			this.email_error = this.pass_error = false;
+		if(self.user_email != "" && self.user_password != ""){
+			self.email_error = self.pass_error = false;
 
 			var user_obj = {
-						username: this.user_email, 
-						password: this.user_password 
-					};
+				username: self.user_email, 
+				password: self.user_password 
+			};
 
 
-			this.auth.loginUser(user_obj, function(result){
-				console.log("resultado: "+ result);
-
+			self.auth.loginUser(user_obj, function(result){
+				console.log("resultado: "+result);
 				if(result == true){
-					// logged 
-					$location.path( "/home" );
+					$location.path( '/home' );
 				}else{
-					// user or pass wrong
-					this.messageError = 'Usuário ou senha incorretos!';
+					self.messageError = "Usuário ou senha incorretos!";
 				}
-			});
+			});	
 
 		}else{
-			if(this.user_email == ""){
-				this.email_error = true;
-				this.messageError = "Preencha o campo de email";
+			if(self.user_email == ""){
+				self.email_error = true;
+				result_msg = "Preencha o campo de email";
 			}else{
-				this.pass_error = true;
-				this.messageError = "Preencha o campo de senha";
+				self.pass_error = true;
+				result_msg = "Preencha o campo de senha";
 			}
 		}
 

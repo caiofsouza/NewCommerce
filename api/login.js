@@ -6,7 +6,7 @@ module.exports = function(req, res) {
     var username = req.body.username || '';
     var password = req.body.password || '';
     if (username == '' || password == '') {
-        return res.status(401).send({error: 'Dados vazios!'});
+        return res.status(400).send({error: 'Dados vazios!'});
     }
 
 
@@ -34,7 +34,7 @@ module.exports = function(req, res) {
         
     }else{
 
-        return res.status(401).send({error: 'Dados incorretos!'});
+        return res.status(400).send({error: 'Dados incorretos!'});
 
     }
 

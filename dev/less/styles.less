@@ -131,12 +131,16 @@ body{
 	    position: absolute;
 	    left: ~"calc(50% - 85px)";
 	    bottom: 35px;
+
+	    &:hover,
+	    &:focus,
+	    &:active{
+			background-color:#ffffff;
+			color:@feature_color;
+		}
+
 	}
 
-	button:hover{
-		background-color:#ffffff;
-		color:@feature_color;
-	}
 }
 
 

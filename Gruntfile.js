@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 		clean: {
 			build: {
 				dot: true,
-				src: [ 'dev/js/all_app.js', 'dev/views/all.html', 'public/views/' ]
+				src: [ 'dev/js/all_app.js', 'dev/views/all.html']
 			}
 		},
 		concat: {
@@ -62,7 +62,7 @@ module.exports = function(grunt) {
 			files:{
 				cwd: 'dev/views/',
 				src: '*.html',
-				dest: 'public/views/',
+				dest: 'public/views',
 				expand: true 
 			}
 		},
