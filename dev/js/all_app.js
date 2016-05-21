@@ -6,36 +6,55 @@ var app = angular.module('newCommerce', ['ngRoute', 'ngCookies']);
 app.config(['$locationProvider', '$routeProvider',
     function($locationProvider, $routeProvider){
 
-
     $routeProvider
         .when('/', {
             templateUrl: 'views/login.html',
-            controller: 'LoginCtrl'
+            controller: 'LoginCtrl',
+            needAuth: false
         })
         .when('/home', {
             templateUrl: 'views/home.html',
-            controller: 'LoginCtrl'
+            controller: 'HomeCtrl',
+            needAuth: true
         })
         .when('/Product', {
             templateUrl: 'views/product.html',
-            controller: 'ProductCtrl'
+            controller: 'ProductCtrl',
+            needAuth: true
         });
+
 
     $routeProvider.otherwise({ redirectTo: '/' });
     $locationProvider.html5Mode(true);
 
 }]);
 
-app.run(['$rootScope','$cookies', '$q',
-    function($rootScope, $cookies, $q) {
-
+app.run(['$rootScope','$cookies', '$q', '$location', '$route', 
+    function($rootScope, $cookies, $q, $location, $route) {
         // get the json obj session
-        var session_obj = JSON.parse($cookies.get('api_auth')) != undefined ? 
-        JSON.parse($cookies.get('api_auth')) : null;
+        var session_obj = $cookies.get('api_auth') != undefined ? 
+        JSON.parse($cookies.get('api_auth')) : undefined;
 
-        var token = session_obj != null ? session_obj.token : null;
+        var token = session_obj != undefined ? session_obj.token : undefined;
 
-        console.log(session_obj, token);
+        // console.log(token);
+
+        $rootScope.$on('$routeChangeStart', function(event, next, current) { 
+            var nextPath = $location.path();
+            var nextRoute = $route.routes[nextPath];
+
+            // console.log(nextRoute);
+
+            if(next.needAuth == true && token == undefined){
+                // redirect to login if need auth     
+                $location.path("/login");
+            }
+
+            if(nextPath == '/login' && token != undefined){
+                // redirect to home if have token
+                $location.path("/home");
+            }
+        });
 
     }
 ]);
@@ -66,7 +85,6 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, A
 
 
 			self.auth.loginUser(user_obj, function(result){
-				console.log("resultado: "+result);
 				if(result == true){
 					$location.path( '/home' );
 				}else{
@@ -127,6 +145,7 @@ app.factory('Auth', ['$http', '$location', '$cookies',
             }).then(function successCallback(response) {
                 // save token in session
                 $cookies.put('api_auth', JSON.stringify(response.data));
+                
                 app.run(['$http', function ($http) {
                     $http.defaults.headers.common['x-access-token'] = response.data.token;
                 }]);

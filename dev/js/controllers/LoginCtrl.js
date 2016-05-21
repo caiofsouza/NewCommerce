@@ -18,7 +18,6 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, A
 
 
 			self.auth.loginUser(user_obj, function(result){
-				console.log("resultado: "+result);
 				if(result == true){
 					$location.path( '/home' );
 				}else{

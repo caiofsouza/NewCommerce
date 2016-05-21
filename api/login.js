@@ -14,8 +14,7 @@ module.exports = function(req, res) {
         
         var user = {
             email: "caio_fsouza@hotmail.com",
-            id: 123,
-            password: 123
+            id: 123
         };
 
         
