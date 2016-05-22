@@ -1,0 +1,37 @@
+<div ng-controller="ProductsCtrl as products">
+	<div id='header-top'>
+		<ul>
+			<li><a href="#" ng-bind="products.user.email"></a></li>
+			<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
+		</ul>
+	</div>
+	<div id="sidebar">
+
+		<ul>
+			<li><a href="/home">Dashboard</a></li>
+			<li class="selected"><a href="/products">Produtos</a></li>
+			<li><a href="/categories">Categorias</a></li>
+			<li><a href="/marketing">Marketing</a></li>
+			<li><a href="/configs">Configurações</a></li>
+		</ul>
+	</div>
+	<div id="all-container">
+		<div id="filter-bar" class="card-container">
+			<div class="filter-container">
+				<label for="search-input">Buscar</label>
+				<input type="text" id="search-input" name="search-input">
+			</div>
+			<div class="grid-container">
+				<span class="card-container">
+					<a href="#"><i class="fa fa-list" aria-hidden="true"></i></a>
+				</span>
+				<span class="card-container">
+					<a href="#"><i class="fa fa-th" aria-hidden="true"></i></a>
+				</span>
+			</div>
+		</div>
+		<div id="products-grid-container">
+			
+		</div>
+	</div>
+</div>

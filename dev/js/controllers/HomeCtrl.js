@@ -1,5 +1,6 @@
-app.controller('HomeCtrl', [function(){
+app.controller('HomeCtrl', ['$cookies', function($cookies){
 
-	this.message = 'teste';
+
+	this.user = JSON.parse($cookies.get('api_auth')).user;
 	
 }]);

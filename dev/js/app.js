@@ -17,14 +17,19 @@ app.config(['$locationProvider', '$routeProvider',
             controller: 'HomeCtrl',
             needAuth: true
         })
-        .when('/Product', {
+        .when('/products', {
+            templateUrl: 'views/products.html',
+            controller: 'ProductsCtrl',
+            needAuth: true
+        })
+        .when('/product', {
             templateUrl: 'views/product.html',
             controller: 'ProductCtrl',
             needAuth: true
         });
 
 
-    $routeProvider.otherwise({ redirectTo: '/' });
+    $routeProvider.otherwise({ redirectTo: '/home' });
     $locationProvider.html5Mode(true);
 
 }]);

@@ -17,14 +17,19 @@ app.config(['$locationProvider', '$routeProvider',
             controller: 'HomeCtrl',
             needAuth: true
         })
-        .when('/Product', {
+        .when('/products', {
+            templateUrl: 'views/products.html',
+            controller: 'ProductsCtrl',
+            needAuth: true
+        })
+        .when('/product', {
             templateUrl: 'views/product.html',
             controller: 'ProductCtrl',
             needAuth: true
         });
 
 
-    $routeProvider.otherwise({ redirectTo: '/' });
+    $routeProvider.otherwise({ redirectTo: '/home' });
     $locationProvider.html5Mode(true);
 
 }]);
@@ -60,9 +65,10 @@ app.run(['$rootScope','$cookies', '$q', '$location', '$route',
 ]);
 
 
-app.controller('HomeCtrl', [function(){
+app.controller('HomeCtrl', ['$cookies', function($cookies){
 
-	this.message = 'teste';
+
+	this.user = JSON.parse($cookies.get('api_auth')).user;
 	
 }]);
 app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, Auth, $http){
@@ -77,6 +83,7 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, A
 		
 		if(self.user_email != "" && self.user_password != ""){
 			self.email_error = self.pass_error = false;
+
 
 			var user_obj = {
 				username: self.user_email, 
@@ -95,26 +102,26 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, A
 		}else{
 			if(self.user_email == ""){
 				self.email_error = true;
-				result_msg = "Preencha o campo de email";
+				self.messageError = "Preencha o campo de email";
 			}else{
 				self.pass_error = true;
-				result_msg = "Preencha o campo de senha";
+				self.messageError = "Preencha o campo de senha";
 			}
 		}
 
 	};
 
 }]);
-app.controller('MenuCtrl', [function($scope){
-	this.user = {
-		name: "Caio Fernandes",
-		email: "caio_fsouza@hotmail.com",
-		active: true
-	};
-}]);
 app.controller('ProductCtrl', [ '$routeParams', function($routeParams){
+	this.user = JSON.parse($cookies.get('api_auth')).user;
+	
 	this.product_id = $routeParams.product_id;
 	this.message = "Product page";
+}]);
+app.controller('ProductsCtrl', [ '$cookies', function($cookies){
+	
+	this.user = JSON.parse($cookies.get('api_auth')).user;
+
 }]);
 app.factory('Auth', ['$http', '$location', '$cookies',
     function($http, $location, $cookies) {  

@@ -11,6 +11,7 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, A
 		if(self.user_email != "" && self.user_password != ""){
 			self.email_error = self.pass_error = false;
 
+
 			var user_obj = {
 				username: self.user_email, 
 				password: self.user_password 
@@ -28,10 +29,10 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, A
 		}else{
 			if(self.user_email == ""){
 				self.email_error = true;
-				result_msg = "Preencha o campo de email";
+				self.messageError = "Preencha o campo de email";
 			}else{
 				self.pass_error = true;
-				result_msg = "Preencha o campo de senha";
+				self.messageError = "Preencha o campo de senha";
 			}
 		}
 
