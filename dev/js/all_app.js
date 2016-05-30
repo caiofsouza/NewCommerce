@@ -3,11 +3,17 @@
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', ['ngRoute', 'ngCookies']);
 
+
 app.config(['$locationProvider', '$routeProvider',
     function($locationProvider, $routeProvider){
 
     $routeProvider
         .when('/', {
+            templateUrl: 'views/login.html',
+            controller: 'LoginCtrl',
+            needAuth: false
+        })
+        .when('/login', {
             templateUrl: 'views/login.html',
             controller: 'LoginCtrl',
             needAuth: false
@@ -34,31 +40,29 @@ app.config(['$locationProvider', '$routeProvider',
 
 }]);
 
-app.run(['$rootScope','$cookies', '$q', '$location', '$route', 
-    function($rootScope, $cookies, $q, $location, $route) {
-        // get the json obj session
-        var session_obj = $cookies.get('api_auth') != undefined ? 
-        JSON.parse($cookies.get('api_auth')) : undefined;
-
-        var token = session_obj != undefined ? session_obj.token : undefined;
-
-        // console.log(token);
+app.run(['$rootScope','$cookies', '$location', '$route', '$timeout', 
+    function($rootScope, $cookies, $location, $route, $timeout) {
 
         $rootScope.$on('$routeChangeStart', function(event, next, current) { 
+            // get the json obj session
+            var session_obj = $cookies.get('api_auth') != undefined ? 
+            JSON.parse($cookies.get('api_auth')) : undefined;
+            var token = session_obj != undefined ? session_obj.token : undefined;
+
+
             var nextPath = $location.path();
             var nextRoute = $route.routes[nextPath];
 
-            // console.log(nextRoute);
-
             if(next.needAuth == true && token == undefined){
-                // redirect to login if need auth     
+                // redirect to login if need auth 
                 $location.path("/login");
-            }
 
-            if(nextPath == '/login' && token != undefined){
+            }else if(nextPath == '/login' && token != undefined){
                 // redirect to home if have token
                 $location.path("/home");
+                
             }
+
         });
 
     }
@@ -71,7 +75,8 @@ app.controller('HomeCtrl', ['$cookies', function($cookies){
 	this.user = JSON.parse($cookies.get('api_auth')).user;
 	
 }]);
-app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, Auth, $http){
+app.controller('LoginCtrl', ['$location', 'Auth', '$http',
+	function($location, Auth, $http){
 	var self = this;
 
 	self.user_email = "";
@@ -93,7 +98,7 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, A
 
 			self.auth.loginUser(user_obj, function(result){
 				if(result == true){
-					$location.path( '/home' );
+				  	$location.path("/home").replace(); 
 				}else{
 					self.messageError = "Usuário ou senha incorretos!";
 				}

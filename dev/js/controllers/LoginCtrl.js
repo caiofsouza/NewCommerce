@@ -1,4 +1,5 @@
-app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, Auth, $http){
+app.controller('LoginCtrl', ['$location', 'Auth', '$http',
+	function($location, Auth, $http){
 	var self = this;
 
 	self.user_email = "";
@@ -20,7 +21,7 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http', function($location, A
 
 			self.auth.loginUser(user_obj, function(result){
 				if(result == true){
-					$location.path( '/home' );
+				  	$location.path("/home").replace(); 
 				}else{
 					self.messageError = "Usuário ou senha incorretos!";
 				}
