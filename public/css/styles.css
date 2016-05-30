@@ -1,3 +1,12 @@
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak,
+.ng-hide {
+  display: none !important;
+}
 * {
   margin: 0px;
   padding: 0px;
@@ -86,7 +95,7 @@ body {
 .btn-link:active,
 .btn-link:focus {
   color: #F38F48;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
 }
 .form-login {
   margin-top: 160px;
@@ -121,7 +130,7 @@ body {
   background-color: #F38F48;
   height: 40px;
   border-radius: 3px;
-  color: #ffffff;
+  color: #FFFFFF;
   width: 170px;
   font-size: 16px;
   margin-top: 20px;
@@ -134,7 +143,7 @@ body {
 .form-login button:hover,
 .form-login button:focus,
 .form-login button:active {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   color: #F38F48;
 }
 #header-top {
@@ -220,6 +229,24 @@ body {
   line-height: 26px;
   padding-left: 30px;
 }
+#all-container #filter-bar .filter-container form {
+  display: inline;
+}
+#all-container #filter-bar .filter-container form button {
+  background-color: #F38F48;
+  color: #FFFFFF;
+  height: 40px;
+  border: 2px solid #F38F48;
+  padding: 3px 5px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+#all-container #filter-bar .filter-container form button:hover,
+#all-container #filter-bar .filter-container form button:active,
+#all-container #filter-bar .filter-container form button:focus {
+  background-color: #FFFFFF;
+  color: #F38F48;
+}
 #all-container #filter-bar .filter-container label {
   line-height: 40px;
   display: inherit;
@@ -237,7 +264,7 @@ body {
 }
 #all-container #filter-bar .grid-container .selected-grid {
   background-color: #F38F48;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 #all-container #filter-bar .grid-container .selected-grid a {
   color: #ffffff !important;
@@ -285,6 +312,7 @@ body {
   font-size: 22px;
   font-weight: 200;
   margin-top: 15px;
+  min-height: 60px;
 }
 #all-container #products-grid-container .product span {
   display: inline-block;

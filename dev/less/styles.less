@@ -1,10 +1,16 @@
 @light_blue: #F9F7FF;
 @red_error: #F93636;
 @feature_color: #F38F48;
+@feature_font_color: #FFFFFF;
 @border_gray: #CECECE;
 @sidebar_color: #424242;
 @font_sidebar: #DEDEDE;
 @tag_color:#9D92C5;
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
+    display: none !important;
+}
+
 
 *{
 	margin:0px;
@@ -96,7 +102,7 @@ body{
 	&:active,
 	&:focus{
 		color: @feature_color;
-		background-color: #ffffff;
+		background-color: @feature_font_color;
 	}
 }
 
@@ -140,7 +146,7 @@ body{
 		background-color: @feature_color;
 		height:40px;
 		border-radius:3px;
-		color: #ffffff;
+		color: @feature_font_color;
 		width: 170px;
 	    font-size: 16px;
 	    margin-top: 20px;
@@ -153,7 +159,7 @@ body{
 	    &:hover,
 	    &:focus,
 	    &:active{
-			background-color:#ffffff;
+			background-color:@feature_font_color;
 			color:@feature_color;
 		}
 
@@ -262,6 +268,28 @@ body{
 			display: inline-block;
 			line-height: 26px;
 		    padding-left: 30px;
+			
+			form{
+			    display: inline;
+
+			    button{
+			    	background-color: @feature_color;
+			    	color:@feature_font_color;
+		    	    height: 40px;
+			    	border:2px solid @feature_color;
+			    	padding:3px 5px;
+			    	cursor:pointer;
+			    	border-radius:2px;
+					
+					&:hover,
+				    &:active,
+				    &:focus{
+				    	background-color: @feature_font_color;
+				    	color:@feature_color;
+				    }
+
+			    }
+			}
 
 			label{
 			    line-height: 40px;
@@ -284,7 +312,7 @@ body{
 			
 			.selected-grid{
 				background-color: @feature_color;
-				color:#ffffff;
+				color:@feature_font_color;
 
 				a{
 					color:#ffffff !important;
@@ -339,6 +367,7 @@ body{
 	    	    font-size: 22px;
 			    font-weight: 200;
 			    margin-top: 15px;
+			    min-height: 60px;
 		    }
 
 		    span{

@@ -19,7 +19,10 @@
 		<div id="filter-bar" class="card-container">
 			<div class="filter-container">
 				<label for="search-input">Buscar</label>
-				<input type="text" id="search-input" name="search-input" placeholder="Nome, código, tag...">
+				<form ng-submit="products.searchProduct()">
+					<input type="text" id="search-input" name="search-input" placeholder="Nome, código, tag..." ng-model="products.search_input">
+					<button id="submit-search" type="submit">Buscar</button>
+				</form>
 			</div>
 			<div class="grid-container">
 				<span class="card-container selected-grid">
@@ -32,220 +35,21 @@
 		</div>
 		<div id="products-grid-container">
 			<p>
-				0-20 de 456 Produtos
+				0-20 de <span ng-model="products.count" ng-bind="products.count"></span> Produtos
 			</p>
-			<div class="product card-container">
+			<div class="product card-container" ng-repeat="product in products.products">
 				<div class="image-mask card-container">
 					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
 				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
+				<h3 ng-bind="product.name"></h3>
+				<br>
+				<span><strong>Código:</strong> {{ product.code }}</span>
+				<span><strong>Ativo:</strong> {{ product.active == true ? 'Sim' : 'Não' }}</span>
 				<p class="tag-cloud card-container">
 					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
+					<span class="tag" ng-repeat="tag in product.tags"> {{ tag }}</span>
 				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-					<span class="tag">Tropical</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
-			</div>
-			<div class="product card-container">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
-				</div>
-				<h3>Camisa de Bolso</h3>
-				<span><strong>Código:</strong> 55012</span>
-				<span><strong>Preço:</strong> R$ 35,00</span>
-				<span><strong>Estoque:</strong> 10</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag">Camisa</span>
-					<span class="tag">Bolso</span>
-					<span class="tag">Estampado</span>
-					<span class="tag">Abacaxi</span>
-					<span class="tag">Tropical</span>
-				</p>
-				<a href="/product/123" class='btn-link card-container'>Ver Produto</a>
+				<a href="/product/{{ product.url }}" class='btn-link card-container'>Ver Produto</a>
 			</div>
 		</div>
 	</div>

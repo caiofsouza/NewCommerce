@@ -14,7 +14,7 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http',
 
 
 			var user_obj = {
-				username: self.user_email, 
+				email: self.user_email, 
 				password: self.user_password 
 			};
 

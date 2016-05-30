@@ -1,6 +1,9 @@
 app.controller('ProductCtrl', [ '$routeParams', function($routeParams){
-	this.user = JSON.parse($cookies.get('api_auth')).user;
+	var self = this;
 	
-	this.product_id = $routeParams.product_id;
-	this.message = "Product page";
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+	
+	self.product_id = $routeParams.product_id;
+	self.message = "Product page";
+	
 }]);

@@ -91,7 +91,7 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http',
 
 
 			var user_obj = {
-				username: self.user_email, 
+				email: self.user_email, 
 				password: self.user_password 
 			};
 
@@ -118,14 +118,40 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http',
 
 }]);
 app.controller('ProductCtrl', [ '$routeParams', function($routeParams){
-	this.user = JSON.parse($cookies.get('api_auth')).user;
+	var self = this;
 	
-	this.product_id = $routeParams.product_id;
-	this.message = "Product page";
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+	
+	self.product_id = $routeParams.product_id;
+	self.message = "Product page";
+	
 }]);
-app.controller('ProductsCtrl', [ '$cookies', function($cookies){
-	
-	this.user = JSON.parse($cookies.get('api_auth')).user;
+app.controller('ProductsCtrl', ['$cookies','$http', function($cookies, $http){
+	var self = this;
+
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+
+	self.searchProduct = function(){
+		if(self.search_input != "" && self.search_input != undefined){
+			$http.get(API_HOST + 'search-products/'+ self.search_input).then(function(res){
+				self.products = res.data;
+				self.count = self.products.length;
+			});
+		}else{
+			self.getAllProducts();
+		}
+	}
+
+	self.getAllProducts = function(){
+		$http.get(API_HOST + 'products').then(function(res){
+			// console.log(res);
+			self.products = res.data;
+			self.count = self.products.length;
+		});
+	};
+
+	self.count = 0;
+	self.getAllProducts();
 
 }]);
 app.factory('Auth', ['$http', '$location', '$cookies',
@@ -151,10 +177,11 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                     return str.join("&");
                 },
                 data:{
-                    username: user_obj.username,
+                    email: user_obj.email,
                     password: user_obj.password
                 }
             }).then(function successCallback(response) {
+                console.log(response.data);
                 // save token in session
                 $cookies.put('api_auth', JSON.stringify(response.data));
                 

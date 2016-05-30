@@ -1,6 +1,7 @@
 var jwt = require('jwt-simple'), 
     moment = require('moment'), 
     segredo = '3e00e9485012252c3212df44549b0b01';
+    mongoose = require('mongoose');
 
 module.exports = function(req, res) {
     var username = req.body.username || '';

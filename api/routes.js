@@ -2,5 +2,7 @@ module.exports = {
 	
 	test: require('./models/test'),
 
-	login: require('./login')
+	login: require('./login'),
+
+	products: require('./models/ProductModel')
 };

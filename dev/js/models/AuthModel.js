@@ -21,10 +21,11 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                     return str.join("&");
                 },
                 data:{
-                    username: user_obj.username,
+                    email: user_obj.email,
                     password: user_obj.password
                 }
             }).then(function successCallback(response) {
+                console.log(response.data);
                 // save token in session
                 $cookies.put('api_auth', JSON.stringify(response.data));
                 
