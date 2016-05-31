@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({
   	extended: true
 }));
 
+
 app.use(bodyParser.json());
 
 app.use('/js', express.static(__dirname + '/js'));

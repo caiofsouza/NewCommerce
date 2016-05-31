@@ -3,9 +3,8 @@
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', ['ngRoute', 'ngCookies']);
 
-
-app.config(['$locationProvider', '$routeProvider',
-    function($locationProvider, $routeProvider){
+app.config(['$locationProvider', '$routeProvider', '$httpProvider', 
+    function($locationProvider, $routeProvider, $httpProvider){
 
     $routeProvider
         .when('/', {
@@ -40,28 +39,44 @@ app.config(['$locationProvider', '$routeProvider',
 
 }]);
 
-app.run(['$rootScope','$cookies', '$location', '$route', '$timeout', 
-    function($rootScope, $cookies, $location, $route, $timeout) {
+app.run(['$rootScope','$location', '$route', 'Auth','$http',
+    function($rootScope, $location, $route, Auth, $http) {
+        var auth = new Auth();
+        // console.log(auth);
+
+        auth.checkUser(function(cookie_obj){
+
+            if(cookie_obj){
+                $http.defaults.headers.common['x-access-token'] = cookie_obj.token;
+            }
+        });
 
         $rootScope.$on('$routeChangeStart', function(event, next, current) { 
-            // get the json obj session
-            var session_obj = $cookies.get('api_auth') != undefined ? 
-            JSON.parse($cookies.get('api_auth')) : undefined;
-            var token = session_obj != undefined ? session_obj.token : undefined;
+            $rootScope.path = $location.path();
+            
+            auth.checkUser(function(cookie_obj){ 
+
+                if(cookie_obj){
+                    // console.log(cookie_obj);
+                    $http.defaults.headers.common['x-access-token'] = cookie_obj.token;
+                    // console.log($http.defaults.headers.common);
+                } 
+
+                var nextPath = $location.path();
+                var nextRoute = $route.routes[nextPath];
 
 
-            var nextPath = $location.path();
-            var nextRoute = $route.routes[nextPath];
+                if(next.needAuth == true && cookie_obj == undefined){
+                    // redirect to login if need auth 
+                    $location.path("/login");
 
-            if(next.needAuth == true && token == undefined){
-                // redirect to login if need auth 
-                $location.path("/login");
+                }else if( ( nextPath == '/login' || nextPath == '/' ) && cookie_obj != undefined){
+                    // redirect to home if have token
+                    $location.path("/home");
+                    
+                }
+            });
 
-            }else if(nextPath == '/login' && token != undefined){
-                // redirect to home if have token
-                $location.path("/home");
-                
-            }
 
         });
 
@@ -69,10 +84,19 @@ app.run(['$rootScope','$cookies', '$location', '$route', '$timeout',
 ]);
 
 
-app.controller('HomeCtrl', ['$cookies', function($cookies){
+
+app.controller('HomeCtrl', ['$cookies', '$location',
+	function($cookies, $location){
+	var self = this;
+
+	self.user = JSON.parse($cookies.get('api_auth')).user;
 
 
-	this.user = JSON.parse($cookies.get('api_auth')).user;
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
 	
 }]);
 app.controller('LoginCtrl', ['$location', 'Auth', '$http',
@@ -124,9 +148,15 @@ app.controller('ProductCtrl', [ '$routeParams', function($routeParams){
 	
 	self.product_id = $routeParams.product_id;
 	self.message = "Product page";
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
 	
 }]);
-app.controller('ProductsCtrl', ['$cookies','$http', function($cookies, $http){
+app.controller('ProductsCtrl', ['$cookies','$http', '$location', 
+	function($cookies, $http, $location){
 	var self = this;
 
 	self.user = JSON.parse($cookies.get('api_auth')).user;
@@ -150,6 +180,11 @@ app.controller('ProductsCtrl', ['$cookies','$http', function($cookies, $http){
 		});
 	};
 
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
+
 	self.count = 0;
 	self.getAllProducts();
 
@@ -160,10 +195,8 @@ app.factory('Auth', ['$http', '$location', '$cookies',
     function Auth(){
         this.token = '';
 
-    };
 
-    Auth.prototype = {
-        loginUser: function(user_obj, fncallback) {
+        this.loginUser = function(user_obj, fncallback) {
             var response;
 
             $http({
@@ -181,13 +214,10 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                     password: user_obj.password
                 }
             }).then(function successCallback(response) {
-                console.log(response.data);
+                // console.log(response.data);
                 // save token in session
                 $cookies.put('api_auth', JSON.stringify(response.data));
                 
-                app.run(['$http', function ($http) {
-                    $http.defaults.headers.common['x-access-token'] = response.data.token;
-                }]);
 
                 if(fncallback != undefined){
                     fncallback(true);
@@ -199,6 +229,17 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                     fncallback(false);
                 }
             });
+
+        };
+
+        this.checkUser = function(fncallback){
+            var token = $cookies.get('api_auth') != undefined ? 
+                        JSON.parse($cookies.get('api_auth')) : undefined;
+
+            if(fncallback != undefined){
+
+                fncallback(token);
+            }
 
         }
     };

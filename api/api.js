@@ -28,7 +28,7 @@ var User = require('./models/UserModel');
 app.use(function (req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization,X-ACCESS-TOKEN');
 	res.setHeader('Access-Control-Allow-Credentials', true);
 	res.setHeader('Content-Type','application/json');
 	next();
@@ -41,15 +41,50 @@ var port = process.env.PORT || 8080;
 
 var router = express.Router();
 
+router.use(function(req, res, next) {
+
+	// middleware to api calls
+
+	// if not is login page
+	if(!req.body.password && !req.body.user_email){
+
+		var token = req.body.token || req.query.token || req.headers['x-access-token'];
+		if(token){
+			var now = new Date();
+			var user = jwt.decode(token, SECRET_KEY);
+			var expires = new Date(user.exp * 1000);
+
+			if(expires <= now){
+				
+				res.status(200).json({ message: "Seu token expirou", token: token });
+
+			}else{
+		    	User.findOne({ _id: user.uid },function(err, user){
+		    		if(user){
+		    			next();
+		    		}
+		    	});
+			}
+
+		}else{
+			res.status(200).json({ message: user, token: token });
+		}
+	}else{
+		next();
+	}
+
+
+});
+
 router.route('/products')
 
 	.get(function(req, res) {
 
 		Product.find(function(err, products){
 			if (err){
-	           	res.send(err);
+	           	res.status(400).send(err);
 			}else{
-	            res.json(products);
+	            res.status(200).send(products);
 			}
 		});
 	});
@@ -103,7 +138,7 @@ router.route('/login')
 					        var expires = moment().add(7, 'days').valueOf();
 
 					        var token = jwt.encode({
-					            iss: user_obj.id,
+					            uid: user_obj.id,
 					            exp: expires
 					        }, SECRET_KEY);
 
@@ -127,34 +162,38 @@ router.route('/login')
 
 
 
-router.route('/')
-	// .get(function(req, res){
-	// 	var user = new User({
-	// 		"name" : "Caio Fernandes",
-	// 		"email" : "caio_fsouza@hotmail.com",
-	// 		"password" : "1234"
-	// 	});
+// router.route('/')
+// 	.get(function(req, res){
+// 		var user = new User({
+// 			"name" : "Admin",
+// 			"email" : "admin",
+// 			"password" : "admin",
+// 			"age": 22,
+// 		    "active": true,
+// 		    "created_at": "2016-05-30 12:00:00"
 
-	// 	user.save(function(err){
-	// 		if (err){
-	//         	res.json({"error": err });
-	//         }else{
+// 		});
+
+// 		user.save(function(err){
+// 			if (err){
+// 	        	res.json({"error": err });
+// 	        }else{
 
 
-	// 		    User.findOne({ name: 'Caio Fernandes' }, function(err, user) {
-	// 		        if (err){
-	// 		        	res.json({"error": err });
-	// 		        }else{
-	// 		        	res.json({"result": user});
-	// 		        }
+// 			    User.findOne({ name: 'Caio Fernandes' }, function(err, user) {
+// 			        if (err){
+// 			        	res.json({"error": err });
+// 			        }else{
+// 			        	res.json({"result": user});
+// 			        }
 
-	// 			});
-	//         }
+// 				});
+// 	        }
 
 			
-	// 	});
+// 		});
 
-	// });
+// 	});
 
 
 app.use('/api', router);

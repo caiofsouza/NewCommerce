@@ -5,5 +5,10 @@ app.controller('ProductCtrl', [ '$routeParams', function($routeParams){
 	
 	self.product_id = $routeParams.product_id;
 	self.message = "Product page";
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
 	
 }]);

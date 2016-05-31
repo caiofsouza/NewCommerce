@@ -4,10 +4,8 @@ app.factory('Auth', ['$http', '$location', '$cookies',
     function Auth(){
         this.token = '';
 
-    };
 
-    Auth.prototype = {
-        loginUser: function(user_obj, fncallback) {
+        this.loginUser = function(user_obj, fncallback) {
             var response;
 
             $http({
@@ -25,13 +23,10 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                     password: user_obj.password
                 }
             }).then(function successCallback(response) {
-                console.log(response.data);
+                // console.log(response.data);
                 // save token in session
                 $cookies.put('api_auth', JSON.stringify(response.data));
                 
-                app.run(['$http', function ($http) {
-                    $http.defaults.headers.common['x-access-token'] = response.data.token;
-                }]);
 
                 if(fncallback != undefined){
                     fncallback(true);
@@ -43,6 +38,17 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                     fncallback(false);
                 }
             });
+
+        };
+
+        this.checkUser = function(fncallback){
+            var token = $cookies.get('api_auth') != undefined ? 
+                        JSON.parse($cookies.get('api_auth')) : undefined;
+
+            if(fncallback != undefined){
+
+                fncallback(token);
+            }
 
         }
     };

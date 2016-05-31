@@ -1,13 +1,17 @@
 <div ng-controller="HomeCtrl as home" class='text-center'>
-	
 	<div id='header-top'>
 		<ul>
 			<li><a href="#" ng-bind="home.user.email"></a></li>
 			<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
+			<li ng-click="home.logout()">
+				<a href="#">
+					<i class="fa fa-sign-out" aria-hidden="true"></i>
+				</a>
+			</li>
 		</ul>
 	</div>
 	<div id="sidebar">
-
+		<img src="https://pbs.twimg.com/profile_images/679444217203044353/UUFdHjia.jpg" alt="">
 		<ul>
 			<li class="selected"><a href="/home">Dashboard</a></li>
 			<li><a href="/products">Produtos</a></li>
@@ -16,5 +20,4 @@
 			<li><a href="/configs">Configurações</a></li>
 		</ul>
 	</div>
-
 </div>

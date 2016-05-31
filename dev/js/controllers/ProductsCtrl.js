@@ -1,4 +1,5 @@
-app.controller('ProductsCtrl', ['$cookies','$http', function($cookies, $http){
+app.controller('ProductsCtrl', ['$cookies','$http', '$location', 
+	function($cookies, $http, $location){
 	var self = this;
 
 	self.user = JSON.parse($cookies.get('api_auth')).user;
@@ -20,6 +21,11 @@ app.controller('ProductsCtrl', ['$cookies','$http', function($cookies, $http){
 			self.products = res.data;
 			self.count = self.products.length;
 		});
+	};
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
 	};
 
 	self.count = 0;

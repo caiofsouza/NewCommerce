@@ -5,8 +5,30 @@ var SALT_WORK_FACTOR = 10;
 
 var UserSchema = new Schema({
     name: String,
-    email : String,
-    password : String
+    facebook_id: Number,
+    email: String,
+    password: String,
+    age: Number,
+    cover_img: String,
+    address: [
+        {
+            name: String,
+            street: String,
+            number: Number,
+            compl: String,
+            city: String,
+            state: String,
+            country: String
+        }
+    ],
+    favorities: [
+        {
+            product_id: String,
+            path_name: String
+        }
+    ],
+    active: Boolean,
+    created_at: String
 });
 
 UserSchema.methods.comparePassword = function(checkPassword, callback) {

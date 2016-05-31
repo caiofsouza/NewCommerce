@@ -3,9 +3,8 @@
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', ['ngRoute', 'ngCookies']);
 
-
-app.config(['$locationProvider', '$routeProvider',
-    function($locationProvider, $routeProvider){
+app.config(['$locationProvider', '$routeProvider', '$httpProvider', 
+    function($locationProvider, $routeProvider, $httpProvider){
 
     $routeProvider
         .when('/', {
@@ -40,31 +39,48 @@ app.config(['$locationProvider', '$routeProvider',
 
 }]);
 
-app.run(['$rootScope','$cookies', '$location', '$route', '$timeout', 
-    function($rootScope, $cookies, $location, $route, $timeout) {
+app.run(['$rootScope','$location', '$route', 'Auth','$http',
+    function($rootScope, $location, $route, Auth, $http) {
+        var auth = new Auth();
+        // console.log(auth);
+
+        auth.checkUser(function(cookie_obj){
+
+            if(cookie_obj){
+                $http.defaults.headers.common['x-access-token'] = cookie_obj.token;
+            }
+        });
 
         $rootScope.$on('$routeChangeStart', function(event, next, current) { 
-            // get the json obj session
-            var session_obj = $cookies.get('api_auth') != undefined ? 
-            JSON.parse($cookies.get('api_auth')) : undefined;
-            var token = session_obj != undefined ? session_obj.token : undefined;
+            $rootScope.path = $location.path();
+            
+            auth.checkUser(function(cookie_obj){ 
+
+                if(cookie_obj){
+                    // console.log(cookie_obj);
+                    $http.defaults.headers.common['x-access-token'] = cookie_obj.token;
+                    // console.log($http.defaults.headers.common);
+                } 
+
+                var nextPath = $location.path();
+                var nextRoute = $route.routes[nextPath];
 
 
-            var nextPath = $location.path();
-            var nextRoute = $route.routes[nextPath];
+                if(next.needAuth == true && cookie_obj == undefined){
+                    // redirect to login if need auth 
+                    $location.path("/login");
 
-            if(next.needAuth == true && token == undefined){
-                // redirect to login if need auth 
-                $location.path("/login");
+                }else if( ( nextPath == '/login' || nextPath == '/' ) && cookie_obj != undefined){
+                    // redirect to home if have token
+                    $location.path("/home");
+                    
+                }
+            });
 
-            }else if(nextPath == '/login' && token != undefined){
-                // redirect to home if have token
-                $location.path("/home");
-                
-            }
 
         });
 
     }
 ]);
+
 
