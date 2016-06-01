@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 		},
 		concat: {
 			js: {
-				src: ['dev/js/app.js', 'dev/js/controllers/*.js', 'dev/js/models/*.js'],
+				src: ['dev/js/app.js', 'dev/js/controllers/*.js', 'dev/js/models/*.js', 'dev/js/scripts.js'],
 				dest: 'dev/js/all_app.js',
 			},
 			dist:{

@@ -1,7 +1,10 @@
 'use strict';
 
+
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', ['ngRoute', 'ngCookies']);
+
+
 
 app.config(['$locationProvider', '$routeProvider', '$httpProvider', 
     function($locationProvider, $routeProvider, $httpProvider){
@@ -10,26 +13,37 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
         .when('/', {
             templateUrl: 'views/login.html',
             controller: 'LoginCtrl',
+            title: "Login",
             needAuth: false
         })
         .when('/login', {
             templateUrl: 'views/login.html',
             controller: 'LoginCtrl',
+            title: "Login",
             needAuth: false
         })
         .when('/home', {
             templateUrl: 'views/home.html',
             controller: 'HomeCtrl',
+            title: "Home",
             needAuth: true
         })
         .when('/products', {
             templateUrl: 'views/products.html',
             controller: 'ProductsCtrl',
+            title: "Produtos",
             needAuth: true
         })
-        .when('/product', {
+        .when('/products/new', {
+            templateUrl: 'views/new_product.html',
+            controller: 'ProductCtrl',
+            title: "Novo Produto",
+            needAuth: true
+        })
+        .when('/product/:product_id', {
             templateUrl: 'views/product.html',
             controller: 'ProductCtrl',
+            title: "Produto",
             needAuth: true
         });
 
@@ -52,6 +66,7 @@ app.run(['$rootScope','$location', '$route', 'Auth','$http',
         });
 
         $rootScope.$on('$routeChangeStart', function(event, next, current) { 
+
             $rootScope.path = $location.path();
             
             auth.checkUser(function(cookie_obj){ 
@@ -80,7 +95,11 @@ app.run(['$rootScope','$location', '$route', 'Auth','$http',
 
         });
 
+        $rootScope.$on("$routeChangeSuccess", function(current, previous){
+            //Change page title, based on Route information
+            $rootScope.title = current.title;
+        });
+
     }
 ]);
-
 

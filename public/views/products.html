@@ -13,11 +13,25 @@
 	<div id="sidebar">
 		<img src="https://pbs.twimg.com/profile_images/679444217203044353/UUFdHjia.jpg" alt="">
 		<ul>
-			<li><a href="/home">Dashboard</a></li>
-			<li class="selected"><a href="/products">Produtos</a></li>
-			<li><a href="/categories">Categorias</a></li>
-			<li><a href="/marketing">Marketing</a></li>
-			<li><a href="/configs">Configurações</a></li>
+			<li><a href="/home"><i class="mdi mdi-chart-bar"></i> Dashboard</a></li>
+			<li class='dropdown selected'>
+				<a href="#"><i class="mdi mdi-shopping"></i> Produtos</a>
+				<ul class="dropdown-submenu opened">
+					<li>
+						<a href="/products">Ver todos</a>
+					</li>
+					<li>
+						<a href="/products/new">Novo produto</a>
+					</li>
+					<li>
+						<a href="/products/stock">Estoque</a>
+					</li>
+				</ul>
+			</li>
+			<li><a href="/orders"><i class="mdi mdi-coin"></i> Vendas</a></li>
+			<li><a href="/categories"><i class="mdi mdi-view-list"></i> Categorias</a></li>
+			<li><a href="/marketing"><i class="mdi mdi-sale"></i> Marketing</a></li>
+			<li><a href="/settings"><i class="mdi mdi-settings"></i> Configurações</a></li>
 		</ul>
 	</div>
 		
@@ -57,6 +71,7 @@
 				</p>
 				<a href="/product/{{ product.url }}" class='btn-link card-container'>Ver Produto</a>
 			</div>
+			
 		</div>
 	</div>
 </div>
