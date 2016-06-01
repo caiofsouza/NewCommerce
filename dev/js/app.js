@@ -2,7 +2,7 @@
 
 
 var API_HOST = 'http://localhost:3000/api/';
-var app = angular.module('newCommerce', ['ngRoute', 'ngCookies']);
+var app = angular.module('newCommerce', ['ngRoute', 'ngCookies', 'ui.utils.masks', 'ngSanitize', 'ui.select']);
 
 
 
@@ -95,10 +95,12 @@ app.run(['$rootScope','$location', '$route', 'Auth','$http',
 
         });
 
-        $rootScope.$on("$routeChangeSuccess", function(current, previous){
+        $rootScope.$on("$routeChangeSuccess", function(event, current, previous){
             //Change page title, based on Route information
-            $rootScope.title = current.title;
+            $rootScope.title = $route.current.title;
         });
+
+
 
     }
 ]);

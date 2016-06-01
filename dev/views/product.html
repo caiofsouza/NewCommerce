@@ -1,9 +1,9 @@
-<div ng-controller="ProductCtrl as product">
+<div ng-controller="ProductCtrl as singleProduct">
 	<div id='header-top'>
 		<ul>
-			<li><a href="#" ng-bind="products.user.email"></a></li>
+			<li><a href="#" ng-bind="singleProduct.user.email"></a></li>
 			<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
-			<li ng-click="products.logout()">
+			<li ng-click="singleProduct.logout()">
 				<a href="#">
 					<i class="fa fa-sign-out" aria-hidden="true"></i>
 				</a>
@@ -34,5 +34,92 @@
 			<li><a href="/settings"><i class="mdi mdi-settings"></i> Configurações</a></li>
 		</ul>
 	</div>
+	<div id="all-container">
+		<div class="card-container row-container">
+			<h3 class="main-title">Adicionar Produto</h3>
+		</div>
+		<div class="card-container new-product-container">
+			<div id="new-product-images">
+				<div class="card-container">
+					
+				</div>
+			</div>
+			<div id="new-product-form">
+				<form class="card-container" ng-submit="singleProduct.update()">
+					<div class="form-group" ng-class="{ error_input: singleProduct.product_name_error }">
+						<label>Nome:</label>
+						<input type="text" name="product_name" placeholder="Nome do produto" ng-model="singleProduct.product.name" ng-change="singleProduct.updateUrl( singleProduct.product.name )">
+					</div>
 
+					<div class="form-group half-col" ng-class="{ error_input: singleProduct.product_code_error }">
+						<label>Código:</label>
+						<input type="text" name="product_code" placeholder="000000" ng-model="singleProduct.product.code">
+					</div>
+
+					<div class="form-group half-col" ng-class="{ error_input: singleProduct.product_price_error }">
+						<label>Preço:</label>
+						<input type="text" name="product_price"  placeholder="R$0.000,00" ng-model="singleProduct.product.price" ui-number-mask>
+					</div>
+
+					<div class="form-group" ng-class="{ error_input: singleProduct.product_stock_error }">
+						<label>Estoque:</label>
+						<input type="text" name="product_stock"  placeholder="0000" ng-model="singleProduct.product.stock">
+					</div>
+
+					<div class="form-group" ng-class="{ error_input: singleProduct.product_description_error }">
+						<label>Descrição:</label>
+						<textarea name="product_description" ng-model="singleProduct.product.description"></textarea>
+					</div>
+
+					<div class="form-group">
+						<label>Url:</label>
+						<input type="text" name="product_url"  placeholder="Url do produto" ng-model="singleProduct.product.url" ng-change="singleProduct.validateUrl()">
+					</div>
+
+
+					<div class="form-group half-col">
+						<label>Categorias</label>
+					    <ui-select multiple ng-model="singleProduct.product.categories" theme="bootstrap" close-on-select="false">
+				    		<ui-select-match>{{ $item }}</ui-select-match>
+				    		<ui-select-choices repeat="category in singleProduct.allCategories | filter:$select.search">
+						    	{{category}}
+						    </ui-select-choices>
+					    </ui-select>
+					</div>
+
+					<div class="form-group half-col">
+						<label>Tags</label>
+				 		<ui-select multiple tagging tagging-label="false" ng-model="singleProduct.product.tags" theme="bootstrap" sortable="true" ng-change="singleProduct.tagsToLower()">
+				    		<ui-select-match>{{$item}}</ui-select-match>
+				    		<ui-select-choices repeat="tag in singleProduct.allTags | filter:$select.search">
+						       {{ tag }}
+						    </ui-select-choices>
+				  		</ui-select>
+					</div>
+
+					<div class="form-group half-col">
+						<label class="checkbox-helper" onselectstart="return false">
+							<input type="checkbox" name="available_marketplace" ng-model="singleProduct.product.available_marketplace">
+							Disponível na MarketPlace (?)
+						</label>
+					</div>
+
+					<div class="form-group half-col">
+						<label class="checkbox-helper" onselectstart="return false">
+							<input type="checkbox" name="active" ng-model="singleProduct.product.active">
+							Ativo
+						</label>
+					</div>
+
+					<div class="form-group">
+						<p>{{ singleProduct.messageError }}</p>
+					</div>
+					
+					<div class="form-group text-left">
+						<button type="submit">Salvar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>

@@ -48,14 +48,14 @@ module.exports = function(grunt) {
 				options: {
 					paths: ["assets/css"]
 				},
-				files: {"public/css/styles.css": "dev/less/styles.less"}
+				files: {"dev/less/styles.css": "dev/less/styles.less"}
 			},
 			production: {
 				options: {
 					paths: ["assets/css"],
 					cleancss: true
 				},
-				files: {"public/css/styles.css": "dev/less/styles.less"}
+				files: {"dev/less/styles.css": "dev/less/styles.less"}
 			}
 		},
 		copy: {
@@ -73,7 +73,7 @@ module.exports = function(grunt) {
 			},
 			target: {
 				files: {
-					'public/css/normalize.min.css': ['node_modules/normalize.css/normalize.css']
+					'public/css/styles.min.css': ['dev/less/styles.css']
 				}
 			}
 		}

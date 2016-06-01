@@ -23,7 +23,6 @@ app.factory('Auth', ['$http', '$location', '$cookies',
                     password: user_obj.password
                 }
             }).then(function successCallback(response) {
-                // console.log(response.data);
                 // save token in session
                 $cookies.put('api_auth', JSON.stringify(response.data));
                 

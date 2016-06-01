@@ -1,9 +1,9 @@
-<div ng-controller="ProductCtrl as product">
+<div ng-controller="ProductCtrl as newProduct">
 	<div id='header-top'>
 		<ul>
-			<li><a href="#" ng-bind="product.user.email"></a></li>
+			<li><a href="#" ng-bind="newProduct.user.email"></a></li>
 			<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
-			<li ng-click="product.logout()">
+			<li ng-click="newProduct.logout()">
 				<a href="#">
 					<i class="fa fa-sign-out" aria-hidden="true"></i>
 				</a>
@@ -38,6 +38,83 @@
 	<div id="all-container">
 		<div class="card-container row-container">
 			<h3 class="main-title">Adicionar Produto</h3>
+		</div>
+		<div class="card-container new-product-container">
+			<div id="new-product-images">
+				<div class="card-container">
+					
+				</div>
+			</div>
+			<div id="new-product-form">
+				<form class="card-container" ng-submit="newProduct.save()">
+					<div class="form-group" ng-class="{ error_input: newProduct.product_name_error }">
+						<label>Nome:</label>
+						<input type="text" name="product_name" placeholder="Nome do produto" ng-model="newProduct.product.name">
+					</div>
+
+					<div class="form-group half-col" ng-class="{ error_input: newProduct.product_code_error }">
+						<label>Código:</label>
+						<input type="text" name="product_code" placeholder="000000" ng-model="newProduct.product.code">
+					</div>
+
+					<div class="form-group half-col" ng-class="{ error_input: newProduct.product_price_error }">
+						<label>Preço:</label>
+						<input type="text" name="product_price"  placeholder="R$0.000,00" ng-model="newProduct.product.price" ui-number-mask>
+					</div>
+
+					<div class="form-group" ng-class="{ error_input: newProduct.product_stock_error }">
+						<label>Estoque:</label>
+						<input type="text" name="product_stock"  placeholder="0000" ng-model="newProduct.product.stock">
+					</div>
+
+					<div class="form-group" ng-class="{ error_input: newProduct.product_description_error }">
+						<label>Descrição:</label>
+						<textarea name="product_description" ng-model="newProduct.product.description"></textarea>
+					</div>
+
+					<div class="form-group half-col">
+						<label>Categorias</label>
+					    <ui-select multiple ng-model="newProduct.product.categories" theme="bootstrap" close-on-select="false">
+				    		<ui-select-match>{{ $item }}</ui-select-match>
+				    		<ui-select-choices repeat="category in newProduct.allCategories | filter:$select.search">
+						    	{{category}}
+						    </ui-select-choices>
+					    </ui-select>
+					</div>
+
+					<div class="form-group half-col">
+						<label>Tags</label>
+				 		<ui-select multiple tagging tagging-label="false" ng-model="newProduct.product.tags" theme="bootstrap" sortable="true">
+				    		<ui-select-match>{{$item}}</ui-select-match>
+				    		<ui-select-choices repeat="tag in newProducts.product.tags | filter:$select.search">
+						       {{ tag }}
+						    </ui-select-choices>
+				  		</ui-select>
+					</div>
+
+					<div class="form-group half-col">
+						<label class="checkbox-helper" onselectstart="return false">
+							<input type="checkbox" name="available_marketplace" ng-model="newProduct.product.available_marketplace">
+							Disponível na MarketPlace (?)
+						</label>
+					</div>
+
+					<div class="form-group half-col">
+						<label class="checkbox-helper" onselectstart="return false">
+							<input type="checkbox" name="active" ng-model="newProduct.product.active">
+							Ativo
+						</label>
+					</div>
+
+					<div class="form-group">
+						<p>{{ newProduct.messageError }}</p>
+					</div>
+					
+					<div class="form-group text-left">
+						<button type="submit">Salvar</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>

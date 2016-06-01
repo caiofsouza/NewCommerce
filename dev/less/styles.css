@@ -7,6 +7,13 @@
 .ng-hide {
   display: none !important;
 }
+.select2 > .select2-choice.ui-select-match {
+  /* Because of the inclusion of Bootstrap */
+  height: 29px;
+}
+.selectize-control > .selectize-dropdown {
+  top: 36px;
+}
 * {
   margin: 0px;
   padding: 0px;
@@ -34,6 +41,7 @@ body {
 }
 .form-group {
   margin-bottom: 15px;
+  padding: 5px;
 }
 .form-group label {
   font-size: 16px;
@@ -44,14 +52,37 @@ body {
   text-align: left;
   font-weight: 300;
 }
+.form-group .checkbox-helper {
+  cursor: pointer;
+  vertical-align: bottom;
+}
+.form-group .checkbox-helper input[type="checkbox"] {
+  margin-right: 10px;
+}
 .form-group input[type="text"],
 .form-group input[type="password"],
-.form-group input[type="email"] {
+.form-group input[type="email"],
+.form-group .ui-select-multiple.ui-select-bootstrap {
   width: 100%;
   height: 35px;
   border-radius: 4px;
   border: 2px solid #CECECE;
-  padding-left: 11px;
+  padding-left: 10px;
+  font-size: 15px;
+  outline: none;
+}
+.form-group .ui-select-multiple.ui-select-bootstrap {
+  height: auto;
+  min-height: 35px !important;
+}
+.form-group textarea {
+  width: 100%;
+  max-width: 100%;
+  height: 120px;
+  border-radius: 4px;
+  border: 2px solid #CECECE;
+  padding-left: 10px;
+  padding-top: 5px;
   font-size: 15px;
   outline: none;
 }
@@ -60,13 +91,46 @@ body {
   color: #464646;
   font-weight: 600;
 }
+.form-group .ui-select-multiple.ui-select-bootstrap .ui-select-match-item {
+  background-color: #F38F48;
+  color: #FFFFFF;
+  border: 1px solid #868686;
+  border-radius: 2px;
+}
+.form-group .ui-select-bootstrap .ui-select-choices-row.active > a {
+  background-color: #F38F48;
+  color: #FFFFFF;
+}
+.form-group.half-col {
+  width: 50%;
+  padding: 5px;
+  float: left;
+}
+.form-group button {
+  background-color: #F38F48;
+  height: 40px;
+  border-radius: 3px;
+  color: #FFFFFF;
+  width: 170px;
+  font-size: 16px;
+  margin-top: 10px;
+  border: 2px solid #F38F48;
+  cursor: pointer;
+}
+.form-group button:hover,
+.form-group button:focus,
+.form-group button:active {
+  background-color: #FFFFFF;
+  color: #F38F48;
+}
 .form-group.error_input label,
 .form-group.error_input span {
   color: #F93636;
 }
 .form-group.error_input input[type="text"],
 .form-group.error_input input[type="password"],
-.form-group.error_input input[type="email"] {
+.form-group.error_input input[type="email"],
+.form-group.error_input textarea {
   border: 2px solid #F93636;
 }
 .card-container {
@@ -98,10 +162,11 @@ body {
 .main-title {
   font-size: 19px;
   color: #F38F48;
-  font-weight: 300;
+  font-weight: 4	00;
   text-transform: uppercase;
+  margin: 5px;
 }
-.btn-link {
+a.btn-link-default {
   border: 2px solid #F38F48;
   background-color: #F38F48;
   border-radius: 2px;
@@ -110,11 +175,12 @@ body {
   display: block;
   text-align: center;
 }
-.btn-link:hover,
-.btn-link:active,
-.btn-link:focus {
+a.btn-link-default:hover,
+a.btn-link-default:active,
+a.btn-link-default:focus {
+  text-decoration: none;
   color: #F38F48;
-  background-color: #FFFFFF;
+  background-color: #FFFFFF !important;
 }
 .form-login {
   margin-top: 160px;
@@ -363,7 +429,7 @@ body {
   font-size: 22px;
   font-weight: 200;
   margin-top: 15px;
-  min-height: 60px;
+  min-height: 50px;
 }
 #all-container #products-grid-container .product span {
   display: inline-block;
@@ -390,10 +456,31 @@ body {
   padding: 3px 5px;
   color: #444444;
   cursor: pointer;
+  margin-left: 6px;
 }
 #all-container #products-grid-container .product .tag-cloud .tag:hover,
 #all-container #products-grid-container .product .tag-cloud .tag:active,
 #all-container #products-grid-container .product .tag-cloud .tag:focus {
   background-color: #9D92C5;
   color: #ffffff;
+}
+.new-product-container {
+  height: auto;
+}
+.new-product-container #new-product-images {
+  width: 30%;
+}
+.new-product-container #new-product-form {
+  width: 70%;
+}
+.new-product-container #new-product-form form {
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+}
+.new-product-container #new-product-images,
+.new-product-container #new-product-form {
+  float: left;
+  display: inline-block;
+  padding: 15px;
 }

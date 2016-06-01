@@ -10,6 +10,15 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
     display: none !important;
 }
+.select2 > .select2-choice.ui-select-match {
+    /* Because of the inclusion of Bootstrap */
+    height: 29px;
+}
+
+.selectize-control > .selectize-dropdown {
+    top: 36px;
+}
+
 
 *{
 	margin:0px;
@@ -36,8 +45,10 @@ body{
     width:100%;
     overflow-y: auto;
 }
+
 .form-group{
 	margin-bottom: 15px;
+	padding:5px;
 
 	label{
 	    font-size: 16px;
@@ -48,12 +59,38 @@ body{
 	    text-align: left;
 	    font-weight: 300;
 	}
-	input[type="text"], input[type="password"], input[type="email"]{
+	.checkbox-helper{
+	    cursor: pointer;
+	    vertical-align: bottom;
+
+	    input[type="checkbox"]{
+	    	margin-right:10px;
+	    }
+	}
+
+	input[type="text"], input[type="password"], input[type="email"], .ui-select-multiple.ui-select-bootstrap{
 		width: 100%;
 	    height: 35px;
 	    border-radius: 4px;
 	    border: 2px solid @border_gray;
-	    padding-left: 11px;
+	    padding-left: 10px;
+	    font-size: 15px;
+	    outline: none;
+	}
+
+	.ui-select-multiple.ui-select-bootstrap{
+		height:auto;
+	    min-height: 35px !important;
+	}
+
+	textarea{
+		width: 100%;
+		max-width:100%;
+	    height: 120px;
+	    border-radius: 4px;
+	    border: 2px solid @border_gray;
+	    padding-left: 10px;
+	    padding-top:5px;
 	    font-size: 15px;
 	    outline: none;
 	}
@@ -62,13 +99,56 @@ body{
 	    color: #464646;
 	    font-weight: 600;
 	}
+
+	.ui-select-multiple.ui-select-bootstrap .ui-select-match-item{
+		background-color: @feature_color;
+		color:@feature_font_color;
+		border: 1px solid #868686;
+	    border-radius: 2px;
+	}
+	.ui-select-bootstrap .ui-select-choices-row {
+
+		&.active>a{
+			background-color: @feature_color;
+			color:@feature_font_color;
+		}
+	}
+
+
+	&.half-col{
+		width:50%;
+		padding:5px;
+		float:left;
+	}
+
+	button{
+		background-color: @feature_color;
+		height:40px;
+		border-radius:3px;
+		color: @feature_font_color;
+		width: 170px;
+	    font-size: 16px;
+	    margin-top: 10px;
+	    border: 2px solid @feature_color;
+	    cursor: pointer;
+
+	    &:hover,
+	    &:focus,
+	    &:active{
+			background-color:@feature_font_color;
+			color:@feature_color;
+		}
+	}
+
+
+
 }
 
 .form-group.error_input{
 	label, span{
 		color:@red_error;
 	}
-	input[type="text"], input[type="password"], input[type="email"]{
+	input[type="text"], input[type="password"], input[type="email"], textarea{
 	    border: 2px solid @red_error;
 	}
 }
@@ -105,11 +185,12 @@ body{
 .main-title{
     font-size: 19px;
     color: @feature_color;
-    font-weight: 300;
+    font-weight: 4	00;
     text-transform: uppercase;
+    margin: 5px;
 }
 
-.btn-link{
+a.btn-link-default{
     border: 2px solid #F38F48;
     background-color: #F38F48;
     border-radius: 2px;
@@ -121,8 +202,9 @@ body{
 	&:hover,
 	&:active,
 	&:focus{
+		text-decoration: none;
 		color: @feature_color;
-		background-color: @feature_font_color;
+		background-color: @feature_font_color !important;
 	}
 }
 
@@ -184,6 +266,7 @@ body{
 		}
 
 	}
+
 
 }
 
@@ -429,7 +512,7 @@ body{
 	    	    font-size: 22px;
 			    font-weight: 200;
 			    margin-top: 15px;
-			    min-height: 60px;
+			    min-height: 50px;
 		    }
 
 		    span{
@@ -442,6 +525,7 @@ body{
 		    .btn-link{
 		    	margin-top: 20px;
 		    }
+
 
 
 		    .tag-cloud{
@@ -460,6 +544,7 @@ body{
 				    padding: 3px 5px;
 				    color: #444444;
 				    cursor: pointer;
+			        margin-left: 6px;
 
 				    &:hover,
 				    &:active,
@@ -473,6 +558,33 @@ body{
 
 	    }
 	}
+}
+
+
+.new-product-container{
+	height:auto;
+
+	#new-product-images{
+		width:30%;
+	}
+
+	#new-product-form{
+		width:70%;
+
+		form{
+			padding:15px;
+			display: inline-block;
+		    width: 100%;
+		}
+		
+	}
+
+	#new-product-images, #new-product-form{
+		float:left;
+		display: inline-block;
+		padding:15px;
+	}
+
 }
 
 

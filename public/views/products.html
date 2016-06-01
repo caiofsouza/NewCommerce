@@ -61,7 +61,7 @@
 				<div class="image-mask card-container">
 					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
 				</div>
-				<h3 ng-bind="product.name"></h3>
+				<h3>{{ product.name | limitTo: 30 }}</h3>
 				<br>
 				<span><strong>Código:</strong> {{ product.code }}</span>
 				<span><strong>Ativo:</strong> {{ product.active == true ? 'Sim' : 'Não' }}</span>
@@ -69,7 +69,7 @@
 					<small>Tags:</small>
 					<span class="tag" ng-repeat="tag in product.tags"> {{ tag }}</span>
 				</p>
-				<a href="/product/{{ product.url }}" class='btn-link card-container'>Ver Produto</a>
+				<a href="/product/{{ product._id }}" class='btn-link-default card-container'>Ver Produto</a>
 			</div>
 			
 		</div>
