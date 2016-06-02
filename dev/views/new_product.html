@@ -36,7 +36,7 @@
 	</div>
 	
 	<div id="all-container">
-		<div class="card-container row-container">
+		<div class="row-container">
 			<h3 class="main-title">Adicionar Produto</h3>
 		</div>
 		<div class="card-container new-product-container">
@@ -46,7 +46,15 @@
 				</div>
 			</div>
 			<div id="new-product-form">
+
 				<form class="card-container" ng-submit="newProduct.save()">
+					<div>
+						<img src="images/loading.gif" alt="" class='loading-gif' ng-show="newProduct.inLoading">
+						<p ng-class='{ alert_success : newProduct.messageError }'>
+							{{ newProduct.messageError }}
+						</p>
+					</div>
+
 					<div class="form-group" ng-class="{ error_input: newProduct.product_name_error }">
 						<label>Nome:</label>
 						<input type="text" name="product_name" placeholder="Nome do produto" ng-model="newProduct.product.name">
@@ -75,9 +83,9 @@
 					<div class="form-group half-col">
 						<label>Categorias</label>
 					    <ui-select multiple ng-model="newProduct.product.categories" theme="bootstrap" close-on-select="false">
-				    		<ui-select-match>{{ $item }}</ui-select-match>
-				    		<ui-select-choices repeat="category in newProduct.allCategories | filter:$select.search">
-						    	{{category}}
+				    		<ui-select-match>{{ $item.name }}</ui-select-match>
+				    		<ui-select-choices repeat="category in newProduct.allCategories | propsFilter: {name: $select.search, _id: $select.search} ">
+						    	{{ category.name }}
 						    </ui-select-choices>
 					    </ui-select>
 					</div>
@@ -104,10 +112,6 @@
 							<input type="checkbox" name="active" ng-model="newProduct.product.active">
 							Ativo
 						</label>
-					</div>
-
-					<div class="form-group">
-						<p>{{ newProduct.messageError }}</p>
 					</div>
 					
 					<div class="form-group text-left">

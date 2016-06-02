@@ -8,7 +8,7 @@ var ProductSchema = new Schema({
     description: String,
     stock: Number,
     url: String,
-    categories: [],
+    categories: [{ _id: Schema.Types.ObjectId, name: String }],
     tags: [String],
     available_marketplace: Boolean,
     active: Boolean

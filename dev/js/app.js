@@ -4,6 +4,37 @@
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', ['ngRoute', 'ngCookies', 'ui.utils.masks', 'ngSanitize', 'ui.select']);
 
+app.filter('propsFilter', function() {
+    return function(items, props) {
+        var out = [];
+            if (angular.isArray(items)) {
+
+                items.forEach(function(item) {
+                    var itemMatches = false;
+
+                    var keys = Object.keys(props);
+                    for (var i = 0; i < keys.length; i++) {
+                            var prop = keys[i];
+                            var text = props[prop].toLowerCase();
+                            if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                                itemMatches = true;
+                                break;
+                            }
+                        }
+
+                        if (itemMatches) {
+                            out.push(item);
+                        }
+                });
+
+            } else {
+                // Let the output be the input untouched
+                out = items;
+            }
+
+            return out;
+        };
+});
 
 
 app.config(['$locationProvider', '$routeProvider', '$httpProvider', 
@@ -53,10 +84,16 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
 
 }]);
 
-app.run(['$rootScope','$location', '$route', 'Auth','$http',
-    function($rootScope, $location, $route, Auth, $http) {
+app.run(['$rootScope','$location', '$route', 'Auth','$http', '$interval',
+    function($rootScope, $location, $route, Auth, $http, $interval) {
         var auth = new Auth();
         // console.log(auth);
+
+        $interval(function(){
+            auth.checkUser(function(cookie_obj){
+                console.log(cookie_obj);
+            });
+        }, 10000);
 
         auth.checkUser(function(cookie_obj){
 

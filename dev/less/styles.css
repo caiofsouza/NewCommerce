@@ -30,8 +30,8 @@ input {
   padding: 0px 10px;
 }
 body {
-  background-color: #F9F7FF;
-  overflow-x: hidden;
+  background-color: #F9F7FF !important;
+  overflow-x: hidden !important;
 }
 #main {
   position: absolute;
@@ -73,7 +73,7 @@ body {
 }
 .form-group .ui-select-multiple.ui-select-bootstrap {
   height: auto;
-  min-height: 35px !important;
+  min-height: 60px !important;
 }
 .form-group textarea {
   width: 100%;
@@ -132,6 +132,18 @@ body {
 .form-group.error_input input[type="email"],
 .form-group.error_input textarea {
   border: 2px solid #F93636;
+}
+img.loading-gif {
+  width: 30px;
+  height: 30px;
+}
+.alert_success {
+  background-color: #fafad2;
+  padding: 10px 30px;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 300;
+  color: #121212;
 }
 .card-container {
   background-color: #ffffff;
@@ -466,6 +478,7 @@ a.btn-link-default:focus {
 }
 .new-product-container {
   height: auto;
+  display: flex;
 }
 .new-product-container #new-product-images {
   width: 30%;

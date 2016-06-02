@@ -62,8 +62,9 @@
 					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
 				</div>
 				<h3>{{ product.name | limitTo: 30 }}</h3>
-				<br>
+				
 				<span><strong>Código:</strong> {{ product.code }}</span>
+				<span><strong>Preço:</strong> {{ product.price | currency:"R$ " }}</span>
 				<span><strong>Ativo:</strong> {{ product.active == true ? 'Sim' : 'Não' }}</span>
 				<p class="tag-cloud card-container">
 					<small>Tags:</small>

@@ -18,6 +18,7 @@ mongoose.connect(db);
 
 var Product = require('./models/ProductModel');
 var User = require('./models/UserModel');
+var Category = require('./models/CategoryModel');
 
 // ==================================
 // ------------ MODELS --------------
@@ -44,11 +45,11 @@ var router = express.Router();
 router.use(function(req, res, next) {
 
 	// middleware to api calls
-
 	// if not is login page
 	if(req.path.indexOf('login') < 0){
 
 		var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
 		if(token){
 			var now = new Date();
 			var user = jwt.decode(token, SECRET_KEY);
@@ -211,7 +212,8 @@ router.route('/tags')
 router.route('/categories')
 
 	.get(function(req, res){
-		Product.find().distinct("categories", function(err, categories){
+
+		Category.find(function(err, categories){
 			if (err){
 	           	res.status(400).send(err);
 			}else{

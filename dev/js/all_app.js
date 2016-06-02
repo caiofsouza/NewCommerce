@@ -4,6 +4,37 @@
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', ['ngRoute', 'ngCookies', 'ui.utils.masks', 'ngSanitize', 'ui.select']);
 
+app.filter('propsFilter', function() {
+    return function(items, props) {
+        var out = [];
+            if (angular.isArray(items)) {
+
+                items.forEach(function(item) {
+                    var itemMatches = false;
+
+                    var keys = Object.keys(props);
+                    for (var i = 0; i < keys.length; i++) {
+                            var prop = keys[i];
+                            var text = props[prop].toLowerCase();
+                            if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                                itemMatches = true;
+                                break;
+                            }
+                        }
+
+                        if (itemMatches) {
+                            out.push(item);
+                        }
+                });
+
+            } else {
+                // Let the output be the input untouched
+                out = items;
+            }
+
+            return out;
+        };
+});
 
 
 app.config(['$locationProvider', '$routeProvider', '$httpProvider', 
@@ -53,10 +84,16 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
 
 }]);
 
-app.run(['$rootScope','$location', '$route', 'Auth','$http',
-    function($rootScope, $location, $route, Auth, $http) {
+app.run(['$rootScope','$location', '$route', 'Auth','$http', '$interval',
+    function($rootScope, $location, $route, Auth, $http, $interval) {
         var auth = new Auth();
         // console.log(auth);
+
+        $interval(function(){
+            auth.checkUser(function(cookie_obj){
+                console.log(cookie_obj);
+            });
+        }, 10000);
 
         auth.checkUser(function(cookie_obj){
 
@@ -177,17 +214,33 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 		tags: []
 	};
 
+	self.inLoading = false;
+
 	self.allTags = [];
-	self.allCategories = ['cat1', 'cat2', 'cat3'];
+	self.selectedCategories = [];
+	self.allCategories = [];
 
 	self.getAllTags = function(){
+		self.inLoading = true;
 		$http.get(API_HOST + 'tags').then(function(res){
 			// return res.data;
 			self.allTags = res.data;
+			self.inLoading = false;
 		});
 	};
 
 	self.getAllTags();
+
+	self.getAllCategories = function(){
+		self.inLoading = true;
+		$http.get(API_HOST + 'categories').then(function(res){
+			// return res.data;
+			self.allCategories = res.data;
+			self.inLoading = false;
+		});
+	};
+
+	self.getAllCategories();
 	
 
 
@@ -201,9 +254,12 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	// };
 
 	self.getProductById = function(product_id){
+		self.inLoading = true;
 		$http.get(API_HOST + 'product/'+product_id).then(function(res){
 			// return res.data;
 			self.product = res.data;
+			self.selectedCategories = self.product.categories;
+			self.inLoading = false;
 		});
 	};
 
@@ -211,9 +267,6 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	if($routeParams.product_id){
 		var i = 0;
 		self.getProductById($routeParams.product_id);
-	}else{
-
-		self.selectedCategories = [];
 	}
 
 
@@ -221,6 +274,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 
 		self.validForm(function(hasError){
 			if(!hasError){
+				self.inLoading = true;
 				// if dont have any error
 				$http.post(API_HOST + 'product/', self.product).then(function(res){
 					if(res.data.result){
@@ -231,6 +285,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 							tags: []
 						};
 					}
+					self.inLoading = false;
 				});
 			}
 		});
@@ -242,11 +297,14 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 		self.validForm(function(hasError){
 			if(!hasError){
 				// if dont have any error
+				self.inLoading = true;
+				
 				$http.put(API_HOST + 'product/'+self.product._id, self.product ).then(function(res){
 					if(res.data.message){
 						self.messageError = "Produto alterado com sucesso!";
 						self.product = res.data.result;
 					}
+					self.inLoading = false;
 				});
 			}
 		});

@@ -13,17 +13,33 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 		tags: []
 	};
 
+	self.inLoading = false;
+
 	self.allTags = [];
-	self.allCategories = ['cat1', 'cat2', 'cat3'];
+	self.selectedCategories = [];
+	self.allCategories = [];
 
 	self.getAllTags = function(){
+		self.inLoading = true;
 		$http.get(API_HOST + 'tags').then(function(res){
 			// return res.data;
 			self.allTags = res.data;
+			self.inLoading = false;
 		});
 	};
 
 	self.getAllTags();
+
+	self.getAllCategories = function(){
+		self.inLoading = true;
+		$http.get(API_HOST + 'categories').then(function(res){
+			// return res.data;
+			self.allCategories = res.data;
+			self.inLoading = false;
+		});
+	};
+
+	self.getAllCategories();
 	
 
 
@@ -37,9 +53,12 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	// };
 
 	self.getProductById = function(product_id){
+		self.inLoading = true;
 		$http.get(API_HOST + 'product/'+product_id).then(function(res){
 			// return res.data;
 			self.product = res.data;
+			self.selectedCategories = self.product.categories;
+			self.inLoading = false;
 		});
 	};
 
@@ -47,9 +66,6 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	if($routeParams.product_id){
 		var i = 0;
 		self.getProductById($routeParams.product_id);
-	}else{
-
-		self.selectedCategories = [];
 	}
 
 
@@ -57,6 +73,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 
 		self.validForm(function(hasError){
 			if(!hasError){
+				self.inLoading = true;
 				// if dont have any error
 				$http.post(API_HOST + 'product/', self.product).then(function(res){
 					if(res.data.result){
@@ -67,6 +84,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 							tags: []
 						};
 					}
+					self.inLoading = false;
 				});
 			}
 		});
@@ -78,11 +96,14 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 		self.validForm(function(hasError){
 			if(!hasError){
 				// if dont have any error
+				self.inLoading = true;
+				
 				$http.put(API_HOST + 'product/'+self.product._id, self.product ).then(function(res){
 					if(res.data.message){
 						self.messageError = "Produto alterado com sucesso!";
 						self.product = res.data.result;
 					}
+					self.inLoading = false;
 				});
 			}
 		});

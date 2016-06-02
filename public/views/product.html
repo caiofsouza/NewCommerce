@@ -38,7 +38,7 @@
 		<div class="card-container row-container">
 			<h3 class="main-title">Adicionar Produto</h3>
 		</div>
-		<div class="card-container new-product-container">
+		<div class="new-product-container">
 			<div id="new-product-images">
 				<div class="card-container">
 					
@@ -46,6 +46,13 @@
 			</div>
 			<div id="new-product-form">
 				<form class="card-container" ng-submit="singleProduct.update()">
+					<div>
+						<img src="images/loading.gif" alt="" class='loading-gif' ng-show="singleProduct.inLoading">
+						<p ng-class='{ alert_success : singleProduct.messageError }'>
+							{{ singleProduct.messageError }}
+						</p>
+					</div>
+
 					<div class="form-group" ng-class="{ error_input: singleProduct.product_name_error }">
 						<label>Nome:</label>
 						<input type="text" name="product_name" placeholder="Nome do produto" ng-model="singleProduct.product.name" ng-change="singleProduct.updateUrl( singleProduct.product.name )">
@@ -79,10 +86,10 @@
 
 					<div class="form-group half-col">
 						<label>Categorias</label>
-					    <ui-select multiple ng-model="singleProduct.product.categories" theme="bootstrap" close-on-select="false">
-				    		<ui-select-match>{{ $item }}</ui-select-match>
-				    		<ui-select-choices repeat="category in singleProduct.allCategories | filter:$select.search">
-						    	{{category}}
+					    <ui-select multiple ng-model="singleProduct.product.categories" theme="bootstrap" close-on-select="false" sortable="true">
+				    		<ui-select-match placeholder="Categorias">{{ $item.name }}</ui-select-match>
+				    		<ui-select-choices repeat="category in singleProduct.allCategories | propsFilter: { name: $select.search } track by category.name">
+						    	{{ category.name | highlight: $select.search }}
 						    </ui-select-choices>
 					    </ui-select>
 					</div>
@@ -91,7 +98,7 @@
 						<label>Tags</label>
 				 		<ui-select multiple tagging tagging-label="false" ng-model="singleProduct.product.tags" theme="bootstrap" sortable="true" ng-change="singleProduct.tagsToLower()">
 				    		<ui-select-match>{{$item}}</ui-select-match>
-				    		<ui-select-choices repeat="tag in singleProduct.allTags | filter:$select.search">
+				    		<ui-select-choices repeat="tag in singleProduct.product.tags | filter: $select.search">
 						       {{ tag }}
 						    </ui-select-choices>
 				  		</ui-select>
@@ -111,10 +118,6 @@
 						</label>
 					</div>
 
-					<div class="form-group">
-						<p>{{ singleProduct.messageError }}</p>
-					</div>
-					
 					<div class="form-group text-left">
 						<button type="submit">Salvar</button>
 					</div>
