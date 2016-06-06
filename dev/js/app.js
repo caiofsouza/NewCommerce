@@ -76,6 +76,24 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
             controller: 'ProductCtrl',
             title: "Produto",
             needAuth: true
+        })
+        .when('/categories', {
+            templateUrl: 'views/categories.html',
+            controller: 'CategoriesCtrl',
+            title: "Categorias",
+            needAuth: true
+        })
+        .when('/categories/new', {
+            templateUrl: 'views/new_category.html',
+            controller: 'CategoryCtrl',
+            title: "Nova Categoria",
+            needAuth: true
+        })
+        .when('/category/:category_id', {
+            templateUrl: 'views/category.html',
+            controller: 'CategoryCtrl',
+            title: "Categoria",
+            needAuth: true
         });
 
 

@@ -1,11 +1,26 @@
 module.exports = function(grunt) {
 
 	grunt.initConfig({
-		clean: {
-			build: {
-				dot: true,
-				src: [ 'dev/js/all_app.js', 'dev/views/all.html']
-			}
+		watch: {
+			gruntfile: {
+				files: 'Gruntfile.js',
+				tasks: ['default'],
+			},
+			scripts:{
+				files: 'dev/js/**/*.js',
+			    tasks: ['concat:js', 'uglify'],
+			},
+			src: {
+				files: 'dev/views/**/*',
+				tasks: ['concat:dist', 'copy'],
+			},
+			styles: {
+		        files: ['dev/less/styles.less'], // which files to watch
+		        tasks: ['less', 'cssmin'],
+		        options: {
+		        	nospawn: true
+		        }
+		    }
 		},
 		concat: {
 			js: {
@@ -13,26 +28,20 @@ module.exports = function(grunt) {
 				dest: 'dev/js/all_app.js',
 			},
 			dist:{
-				src: ['dev/views/header.html', 'dev/views/footer.html'],
+				src: ['dev/views/comps/header.html', 'dev/views/comps/footer.html'],
 				dest: 'public/index.html',
 			}
 		},
-		watch: {
-			gruntfile: {
-				files: 'Gruntfile.js',
-				tasks: ['default'],
-			},
-			src: {
-				files: ['dev/**/*'],
-				tasks: ['default'],
-			},
-			styles: {
-		        files: ['dev/less/styles.less'], // which files to watch
-		        tasks: ['less'],
-		        options: {
-		        	nospawn: true
-		        }
-		    }
+		copy: {
+			files:{
+				cwd: 'dev/views',
+				src: ['**/*.html', '!comps/*.html'],
+				dest: 'public/views',
+				expand: true,
+				flatten: true,
+				filter: 'isFile'
+
+			}
 		},
 		uglify: {
 			options: {
@@ -58,14 +67,6 @@ module.exports = function(grunt) {
 				files: {"dev/less/styles.css": "dev/less/styles.less"}
 			}
 		},
-		copy: {
-			files:{
-				cwd: 'dev/views/',
-				src: '*.html',
-				dest: 'public/views',
-				expand: true 
-			}
-		},
 		cssmin: {
 			options: {
 				shorthandCompacting: false,
@@ -80,7 +81,6 @@ module.exports = function(grunt) {
 	});
 
 
-	grunt.loadNpmTasks('grunt-contrib-clean' );
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-less');
@@ -90,12 +90,10 @@ module.exports = function(grunt) {
 
 	// Register the default task.
 	grunt.registerTask("default", [ 
-		"clean", 
 		"concat", 
 		"uglify", 
-		"less", 
 		"copy", 
-		"cssmin", 
+		"cssmin"
 	]);
 
 

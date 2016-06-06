@@ -4,7 +4,6 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	
 	// user var to load header infos
 	self.user = JSON.parse($cookies.get('api_auth')).user;
-
 	self.messageError = "";
 
 	self.product = {

@@ -1,9 +1,10 @@
-<div ng-controller="HomeCtrl as home" class='text-center'>
+<div ng-controller="CategoriesCtrl as categories" class='text-center'>
 	<div id='header-top'>
+		<h2 class="page-title">Categorias</h2>
 		<ul>
-			<li><a href="#" ng-bind="products.user.email"></a></li>
+			<li><a href="#" ng-bind="categories.user.email"></a></li>
 			<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
-			<li ng-click="products.logout()">
+			<li ng-click="categories.logout()">
 				<a href="#">
 					<i class="fa fa-sign-out" aria-hidden="true"></i>
 				</a>
@@ -13,7 +14,7 @@
 	<div id="sidebar">
 		<img src="https://pbs.twimg.com/profile_images/679444217203044353/UUFdHjia.jpg" alt="">
 		<ul>
-			<li class="selected"><a href="/home"><i class="mdi mdi-chart-bar"></i> Dashboard</a></li>
+			<li><a href="/home"><i class="mdi mdi-chart-bar"></i> Dashboard</a></li>
 			<li class='dropdown'>
 				<a href="#"><i class="mdi mdi-shopping"></i> Produtos</a>
 				<ul class="dropdown-submenu">
@@ -29,9 +30,18 @@
 				</ul>
 			</li>
 			<li><a href="/orders"><i class="mdi mdi-coin"></i> Vendas</a></li>
-			<li><a href="/categories"><i class="mdi mdi-view-list"></i> Categorias</a></li>
+			<li class="selected"><a href="/categories"><i class="mdi mdi-view-list"></i> Categorias</a></li>
 			<li><a href="/marketing"><i class="mdi mdi-sale"></i> Marketing</a></li>
 			<li><a href="/settings"><i class="mdi mdi-settings"></i> Configurações</a></li>
 		</ul>
+	</div>
+	<div id="all-container">
+		<div id="categories-grid">
+		<!-- <h2>Categorias</h2> -->
+			<div class="category-item card-container" ng-repeat="category in categories.allCategories">
+				<h3>{{ category.name }}</h3>
+				<h4>{{ category._id }}</h4>
+			</div>
+		</div>
 	</div>
 </div>

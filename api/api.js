@@ -1,3 +1,4 @@
+
 var mongoose = require('mongoose');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -207,6 +208,35 @@ router.route('/tags')
 	            res.status(200).send(tags);
 			}
 		});
+	});
+
+router.route('/category')
+
+	.post(function(req, res){
+		
+		if(!req.body.name){
+			res.status(400).json({ message: "Dados incompletos!" });
+		}else{
+			var new_category = new Category(req.body);
+
+			new_category.save(function(err){
+				if (err){
+		        	res.status(400).send(err);
+		        }else{
+
+				    Category.findOne({}, function(err, category) {
+
+				        if (err){
+				        	res.status(400).send(err);
+				        }else{
+				        	res.json({"result": category});
+				        }
+
+					});
+
+		        }
+			});
+		}
 	});
 
 router.route('/categories')

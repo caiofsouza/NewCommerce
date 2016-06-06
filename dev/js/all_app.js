@@ -76,6 +76,24 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
             controller: 'ProductCtrl',
             title: "Produto",
             needAuth: true
+        })
+        .when('/categories', {
+            templateUrl: 'views/categories.html',
+            controller: 'CategoriesCtrl',
+            title: "Categorias",
+            needAuth: true
+        })
+        .when('/categories/new', {
+            templateUrl: 'views/new_category.html',
+            controller: 'CategoryCtrl',
+            title: "Nova Categoria",
+            needAuth: true
+        })
+        .when('/category/:category_id', {
+            templateUrl: 'views/category.html',
+            controller: 'CategoryCtrl',
+            title: "Categoria",
+            needAuth: true
         });
 
 
@@ -143,6 +161,44 @@ app.run(['$rootScope','$location', '$route', 'Auth','$http', '$interval',
 ]);
 
 
+app.controller("CategoriesCtrl", ['$cookies', '$location', '$http',
+	function($cookies, $location, $http){
+	var self = this;
+
+	// user var to load header infos
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+
+	self.allCategories = [];
+	
+
+
+	self.getAllCategories = function(){
+		self.inLoading = true;
+		$http.get(API_HOST + 'categories').then(function(res){
+			// return res.data;
+			self.allCategories = res.data;
+			self.inLoading = false;
+		});
+	};
+
+	self.getAllCategories();
+
+	self.saveCategory = function(){
+		self.inLoading = true;
+		$http.post(API_HOST + 'category', self.category).then(function(res){
+			if(res.result){
+				self.message = "Categoria adicionada com sucesso!";
+				self.inLoading = false;
+			}
+		});
+	};
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
+
+}]);
 app.controller('HomeCtrl', ['$cookies', '$location',
 	function($cookies, $location){
 	var self = this;
@@ -205,7 +261,6 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	
 	// user var to load header infos
 	self.user = JSON.parse($cookies.get('api_auth')).user;
-
 	self.messageError = "";
 
 	self.product = {
