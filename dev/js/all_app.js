@@ -258,6 +258,9 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 		$http.get(API_HOST + 'product/'+product_id).then(function(res){
 			// return res.data;
 			self.product = res.data;
+			
+			console.log(self.product.categories);
+
 			self.selectedCategories = self.product.categories;
 			self.inLoading = false;
 		});
@@ -276,6 +279,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 			if(!hasError){
 				self.inLoading = true;
 				// if dont have any error
+				console.log(self.product);
 				$http.post(API_HOST + 'product/', self.product).then(function(res){
 					if(res.data.result){
 						self.messageError = "Produto adicionado com sucesso!";
