@@ -135,7 +135,7 @@ router.route('/product/:product_id')
 	            if(product){
 	            	res.status(200).json(product);
 	            }else{
-	            	res.status(200).json({"message": "Produto Não encontrado"});
+	            	res.status(200).json({message: "Produto Não encontrado"});
 	            }
 			}
 		});
@@ -224,12 +224,12 @@ router.route('/category')
 		        	res.status(400).send(err);
 		        }else{
 
-				    Category.findOne({}, function(err, category) {
+				    Category.findOne().sort('-_id').exec(function(err, category) {
 
 				        if (err){
 				        	res.status(400).send(err);
 				        }else{
-				        	res.json({"result": category});
+				        	res.json({result: category});
 				        }
 
 					});
@@ -237,6 +237,27 @@ router.route('/category')
 		        }
 			});
 		}
+	});
+
+router.route('/category/:category_id')
+
+	.put(function(req, res){
+
+		Category.findById(req.params.category_id, function(err, category){
+			if(err){
+				res.send(err);
+			}else{
+				category.name = req.body.name;
+
+				category.save(function(err){
+					if(err){
+						res.status(400).send(err);
+					}else{
+						res.json({message: "Salvo com sucesso!", result: category});
+					}
+				})
+			}
+		})
 	});
 
 router.route('/categories')

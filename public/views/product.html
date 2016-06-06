@@ -36,12 +36,10 @@
 		</ul>
 	</div>
 	<div id="all-container">
-		<div class="card-container row-container">
-			<h3 class="main-title">Adicionar Produto</h3>
-		</div>
 		<div class="new-product-container">
 			<div id="new-product-images">
 				<div class="card-container">
+					
 					
 				</div>
 			</div>
@@ -84,39 +82,42 @@
 						<input type="text" name="product_url"  placeholder="Url do produto" ng-model="singleProduct.product.url" ng-change="singleProduct.validateUrl()">
 					</div>
 
+					<div class="row-simple">
+						<div class="form-group half-col">
+							<label>Categorias</label>
+						    <ui-select multiple ng-model="singleProduct.product.categories" theme="bootstrap" close-on-select="false" sortable="true">
+					    		<ui-select-match placeholder="Categorias">{{ $item.name }}</ui-select-match>
+					    		<ui-select-choices repeat="category in singleProduct.allCategories | propsFilter: { name: $select.search } track by category._id">
+							    	{{ category.name | highlight: $select.search }}
+							    </ui-select-choices>
+						    </ui-select>
+						</div>
 
-					<div class="form-group half-col">
-						<label>Categorias</label>
-					    <ui-select multiple ng-model="singleProduct.product.categories" theme="bootstrap" close-on-select="false" sortable="true">
-				    		<ui-select-match placeholder="Categorias">{{ $item.name }}</ui-select-match>
-				    		<ui-select-choices repeat="category in singleProduct.allCategories | propsFilter: { name: $select.search } track by category.name">
-						    	{{ category.name | highlight: $select.search }}
-						    </ui-select-choices>
-					    </ui-select>
+						<div class="form-group half-col">
+							<label>Tags</label>
+					 		<ui-select multiple tagging tagging-label="false" ng-model="singleProduct.product.tags" theme="bootstrap" sortable="true" ng-change="singleProduct.tagsToLower()">
+					    		<ui-select-match>{{$item}}</ui-select-match>
+					    		<ui-select-choices repeat="tag in singleProduct.product.tags | filter: $select.search">
+							       {{ tag }}
+							    </ui-select-choices>
+					  		</ui-select>
+						</div>
 					</div>
+					
+					<div class="row-simple">
+						<div class="form-group half-col">
+							<label class="checkbox-helper" onselectstart="return false">
+								<input type="checkbox" name="available_marketplace" ng-model="singleProduct.product.available_marketplace">
+								Disponível na MarketPlace (?)
+							</label>
+						</div>
 
-					<div class="form-group half-col">
-						<label>Tags</label>
-				 		<ui-select multiple tagging tagging-label="false" ng-model="singleProduct.product.tags" theme="bootstrap" sortable="true" ng-change="singleProduct.tagsToLower()">
-				    		<ui-select-match>{{$item}}</ui-select-match>
-				    		<ui-select-choices repeat="tag in singleProduct.product.tags | filter: $select.search">
-						       {{ tag }}
-						    </ui-select-choices>
-				  		</ui-select>
-					</div>
-
-					<div class="form-group half-col">
-						<label class="checkbox-helper" onselectstart="return false">
-							<input type="checkbox" name="available_marketplace" ng-model="singleProduct.product.available_marketplace">
-							Disponível na MarketPlace (?)
-						</label>
-					</div>
-
-					<div class="form-group half-col">
-						<label class="checkbox-helper" onselectstart="return false">
-							<input type="checkbox" name="active" ng-model="singleProduct.product.active">
-							Ativo
-						</label>
+						<div class="form-group half-col">
+							<label class="checkbox-helper" onselectstart="return false">
+								<input type="checkbox" name="active" ng-model="singleProduct.product.active">
+								Ativo
+							</label>
+						</div>
 					</div>
 
 					<div class="form-group text-left">
