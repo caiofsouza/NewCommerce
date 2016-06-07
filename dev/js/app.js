@@ -107,11 +107,11 @@ app.run(['$rootScope','$location', '$route', 'Auth','$http', '$interval',
         var auth = new Auth();
         // console.log(auth);
 
-        $interval(function(){
-            auth.checkUser(function(cookie_obj){
-                console.log(cookie_obj);
-            });
-        }, 10000);
+        // $interval(function(){
+        //     auth.checkUser(function(cookie_obj){
+        //         console.log(cookie_obj);
+        //     });
+        // }, 10000);
 
         auth.checkUser(function(cookie_obj){
 

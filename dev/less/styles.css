@@ -471,7 +471,7 @@ a.btn-link-default:focus {
 #all-container #products-grid-container .product .btn-link {
   margin-top: 20px;
 }
-#all-container #products-grid-container .product .tag-cloud {
+#all-container .tag-cloud {
   height: 70px;
   margin-top: 10px;
   line-height: 27px;
@@ -479,7 +479,7 @@ a.btn-link-default:focus {
   overflow: auto;
   text-align: left;
 }
-#all-container #products-grid-container .product .tag-cloud .tag {
+#all-container .tag-cloud .tag {
   box-shadow: 1px 1px 4px 1px #9D92C5;
   border-radius: 9px;
   display: inline;
@@ -489,9 +489,9 @@ a.btn-link-default:focus {
   cursor: pointer;
   margin-left: 6px;
 }
-#all-container #products-grid-container .product .tag-cloud .tag:hover,
-#all-container #products-grid-container .product .tag-cloud .tag:active,
-#all-container #products-grid-container .product .tag-cloud .tag:focus {
+#all-container .tag-cloud .tag:hover,
+#all-container .tag-cloud .tag:active,
+#all-container .tag-cloud .tag:focus {
   background-color: #9D92C5;
   color: #ffffff;
 }

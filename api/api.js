@@ -248,6 +248,7 @@ router.route('/category/:category_id')
 				res.send(err);
 			}else{
 				category.name = req.body.name;
+				category.sub_cats = req.body.sub_cats;
 
 				category.save(function(err){
 					if(err){

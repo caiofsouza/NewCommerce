@@ -82,9 +82,6 @@ app.controller("CategoriesCtrl", ['$scope', '$cookies', '$location', '$http',
 
 	self.edit = function(cat_id){
 
-
-
-
 		var hideAll = self.allCategories.filter(function(el){
 			return el.visible === true;
 		});
@@ -97,9 +94,11 @@ app.controller("CategoriesCtrl", ['$scope', '$cookies', '$location', '$http',
 			return el._id === cat_id;
 		});
 
+
+
 		if(hideAll.length > 0 && hideAll[0]._id == cat_id){
 			// btn salvar clicked
-
+			
 			if(selectedCategory[0].name != ""){
 				$http.put( API_HOST + 'category/' + cat_id, selectedCategory[0]).then(function(res){
 					selectedCategory[0].btnStatus = "Editar";
