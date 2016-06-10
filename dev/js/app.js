@@ -94,6 +94,18 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
             controller: 'CategoryCtrl',
             title: "Categoria",
             needAuth: true
+        })
+        .when('/orders/:order_id', {
+            templateUrl: 'views/order.html',
+            controller: 'OrderCtrl',
+            title: "Pedido",
+            needAuth: true
+        })
+        .when('/orders', {
+            templateUrl: 'views/orders.html',
+            controller: 'OrdersCtrl',
+            title: "Pedidos",
+            needAuth: true
         });
 
 

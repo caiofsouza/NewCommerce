@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 
+
 var app = express();
 
 // the key to jwt
@@ -20,6 +21,8 @@ mongoose.connect(db);
 var Product = require('./models/ProductModel');
 var User = require('./models/UserModel');
 var Category = require('./models/CategoryModel');
+var Order = require('./models/OrderModel');
+
 
 // ==================================
 // ------------ MODELS --------------
@@ -272,6 +275,35 @@ router.route('/categories')
 	            res.status(200).send(categories);
 			}
 		});
+	});
+
+router.route('/orders')
+
+	.get(function(req, res){
+
+		// Order.find(function(err, orders){
+		// 	if (err){
+	 //           	res.status(400).send(err);
+		// 	}else{
+
+		// 		var result_obj = orders;
+
+		// 		result_obj.forEach(function(el, ind){
+		// 			el.user_id = User.findOne({ _id: el.user_id });
+		// 			el.editado = "true";
+		// 		});
+
+	 //            res.status(200).send(result_obj);
+		// 	}
+		// });
+
+		Order.find()
+		.deepPopulate('user_id products')
+		.exec(function(err, orders){
+				res.status(200).send(orders);
+			});
+			
+
 	});
 
 router.route('/search-products/:search')

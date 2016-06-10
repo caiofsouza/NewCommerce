@@ -1,6 +1,6 @@
 <div ng-controller="OrdersCtrl as orders" class='text-center'>
 	<div id='header-top'>
-	<h2 class="page-title">Vendas</h2>
+	<h2 class="page-title">Pedidos</h2>
 		<ul>
 			<li><a href="#" ng-bind="orders.user.email"></a></li>
 			<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
@@ -29,10 +29,17 @@
 					</li>
 				</ul>
 			</li>
-			<li class="selected"><a href="/orders"><i class="mdi mdi-coin"></i> Vendas</a></li>
+			<li class="selected"><a href="/orders"><i class="mdi mdi-coin"></i> Pedidos</a></li>
 			<li><a href="/categories"><i class="mdi mdi-view-list"></i> Categorias</a></li>
 			<li><a href="/marketing"><i class="mdi mdi-sale"></i> Marketing</a></li>
 			<li><a href="/settings"><i class="mdi mdi-settings"></i> Configurações</a></li>
 		</ul>
+	</div>
+	<div id="all-container">
+		<div class="orders-grid-container">
+			<div ng-repeat="order in orders.allOrders" class="card-container">
+				usuario:
+			</div>
+		</div>
 	</div>
 </div>

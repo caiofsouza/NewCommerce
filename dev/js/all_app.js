@@ -94,6 +94,18 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
             controller: 'CategoryCtrl',
             title: "Categoria",
             needAuth: true
+        })
+        .when('/orders/:order_id', {
+            templateUrl: 'views/order.html',
+            controller: 'OrderCtrl',
+            title: "Pedido",
+            needAuth: true
+        })
+        .when('/orders', {
+            templateUrl: 'views/orders.html',
+            controller: 'OrdersCtrl',
+            title: "Pedidos",
+            needAuth: true
         });
 
 
@@ -334,6 +346,38 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http',
 	};
 
 }]);
+app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
+	function($scope, $cookies, $location, $http){
+	var self = this;
+	self.allOrders = [];
+	
+	
+	// user var to load header infos
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
+
+	self.getAllOrders = function(){
+		$http.get(API_HOST + 'orders').then(function(res){
+			if(res.data){
+				console.log(res.data);
+			}
+		});
+	};
+
+	self.allOrders = self.getAllOrders();
+
+
+}]);
+
+
+
+
+
+
 app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',   
 	function($location, $routeParams, $cookies, $http){
 	var self = this; 
