@@ -36,9 +36,42 @@
 		</ul>
 	</div>
 	<div id="all-container">
+		<div id="filter-bar" class="card-container">
+			<div class="filter-container">
+				<label for="search-input">Buscar</label>
+				<form ng-submit="products.searchProduct()">
+					<input type="text" id="search-input" name="search-input" placeholder="Nome, código, tag..." ng-model="products.search_input">
+					<button id="submit-search" type="submit">Buscar</button>
+				</form>
+			</div>
+			<div class="grid-container">
+				<span class="card-container selected-grid">
+					<a href="#"><i class="fa fa-th" aria-hidden="true"></i></a>
+				</span>
+				<span class="card-container">
+					<a href="#"><i class="fa fa-list" aria-hidden="true"></i></a>
+				</span>
+			</div>
+		</div>
+		
 		<div class="orders-grid-container">
-			<div ng-repeat="order in orders.allOrders" class="card-container">
-				usuario:
+			<div ng-repeat="order in orders.allOrders" class="card-container order-item">
+				<ul>
+					<li>Usuario: {{ order.user.name }}</li>
+					<li>Total: {{ order.total_value | currency }}</li>
+					<li>Status: {{ order.status }}</li>
+					<li>Finalizado: {{ order.done }}</li>
+					<li>Data: {{ order.date }}</li>
+					<li>Produtos: 
+						<ul>
+							<li ng-repeat="product in order.products">
+								Código: <a href="/product/{{ product._id }}" target="_blank">{{ product.item.code }}</a> <br>
+								Nome: {{ product.item.name }} <br>
+								Valor: {{ product.item.price | currency }}
+							</li>
+						</ul>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>

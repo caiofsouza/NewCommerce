@@ -95,18 +95,20 @@
 
 # Orders
 {
-	user_id: ObjectId,
-	products: [ sku_ids ],
+	user: ObjectId,
+	products: [ { item: ObjectId, amount: int } ],
+	promotion_code: ObjectId ,
 	total_value: double,
-	promotion_code: ObjectId() ,
+	total_amount: int,
 	total_discounted_value: double,
 	user_address: int, // number of array position in user address's,
 	payment_method: String,
-	payment_installments: int, // installments of order. Ex: 4 
 	value_with_installments: double, // value with installments. Ex: 17.50 
+	payment_installments: int, // installments of order. Ex: 4 
 	status: int, // 0 for waiting payment, 1 for waiting to delivery, 2 for delivered
 	done: boolean,
 	date: dateTime
 	
 }
+
 

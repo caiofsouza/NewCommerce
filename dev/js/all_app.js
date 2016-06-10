@@ -364,11 +364,12 @@ app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
 		$http.get(API_HOST + 'orders').then(function(res){
 			if(res.data){
 				console.log(res.data);
+				self.allOrders = res.data;
 			}
 		});
 	};
 
-	self.allOrders = self.getAllOrders();
+	self.getAllOrders();
 
 
 }]);

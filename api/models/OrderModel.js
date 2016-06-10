@@ -3,8 +3,14 @@ var Schema = mongoose.Schema;
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var OrderSchema = new Schema({
-   user_id: { type: Schema.Types.ObjectId, ref: "User" },
-   products: [{type: Schema.Types.ObjectId, ref: 'Product' }],
+   user: { type: Schema.Types.ObjectId, ref: "User" },
+   products: [
+      { 
+         item: { type: Schema.Types.ObjectId, ref: 'Product' },  
+         amount: Number
+      },
+
+   ],
    total_value: Number,
    promotion_code: String,
    total_discounted_value: Number,
@@ -17,8 +23,8 @@ var OrderSchema = new Schema({
 
 OrderSchema.plugin(deepPopulate, {
    whitelist: [
-      'user_id',
-      'products'
+      'user',
+      'products.item'
    ]
 });
 

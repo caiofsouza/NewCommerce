@@ -281,24 +281,9 @@ router.route('/orders')
 
 	.get(function(req, res){
 
-		// Order.find(function(err, orders){
-		// 	if (err){
-	 //           	res.status(400).send(err);
-		// 	}else{
-
-		// 		var result_obj = orders;
-
-		// 		result_obj.forEach(function(el, ind){
-		// 			el.user_id = User.findOne({ _id: el.user_id });
-		// 			el.editado = "true";
-		// 		});
-
-	 //            res.status(200).send(result_obj);
-		// 	}
-		// });
-
 		Order.find()
-		.deepPopulate('user_id products')
+		.sort({ date: -1})
+		.deepPopulate('user products.item')
 		.exec(function(err, orders){
 				res.status(200).send(orders);
 			});
