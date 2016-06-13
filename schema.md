@@ -86,6 +86,7 @@
 			path_name: string
 		}
 	],
+	profile_type: String,
 	active: boolean,
 	created_at: dateTime
 
@@ -109,6 +110,31 @@
 	done: boolean,
 	date: dateTime
 	
+}
+
+# Banners
+{
+	name: String,
+	id: String,
+	url: String,
+	url_on_mobile: String,
+	active: Boolean,
+	date: dateTime
+}
+
+# Settings
+{
+	analytics_script: String,
+	facebook_api: String,
+	instagram_api: {
+		client_secret: String,
+		client_key: String
+	},
+	twitter: {
+		client_secret: String,
+		client_key: String
+	},
+	gtm: String
 }
 
 
