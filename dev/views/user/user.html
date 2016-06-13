@@ -1,9 +1,10 @@
-<div ng-controller="HomeCtrl as home" class='text-center'>
+<div ng-controller="UserCtrl as user" class='text-center'>
 	<div id='header-top'>
+	<h2 class="page-title">Usuario</h2>
 		<ul>
-			<li><a href="#" ng-bind="products.user.email"></a></li>
+			<li><a href="#" ng-bind="user.user.email"></a></li>
 			<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
-			<li ng-click="products.logout()">
+			<li ng-click="user.logout()">
 				<a href="#">
 					<i class="fa fa-sign-out" aria-hidden="true"></i>
 				</a>
@@ -13,7 +14,7 @@
 	<div id="sidebar">
 		<img src="https://pbs.twimg.com/profile_images/679444217203044353/UUFdHjia.jpg" alt="">
 		<ul>
-			<li class="selected"><a href="/home"><i class="mdi mdi-chart-bar"></i> Dashboard</a></li>
+			<li><a href="/home"><i class="mdi mdi-chart-bar"></i> Dashboard</a></li>
 			<li><a href="/messages"><i class="mdi mdi-chat"></i> Mensagens</a></li>
 			<li class='dropdown'>
 				<a href="#"><i class="mdi mdi-shopping"></i> Produtos</a>
@@ -30,11 +31,8 @@
 			<li><a href="/categories"><i class="mdi mdi-view-list"></i> Categorias</a></li>
 			<li><a href="/banners"><i class="mdi mdi-view-list"></i> Banners</a></li>
 			<li><a href="/marketing"><i class="mdi mdi-sale"></i> Marketing</a></li>
-<li><a href="/users"><i class="mdi mdi-users"></i> Usuários</a></li>
+			<li class="selected"><a href="/users"><i class="mdi mdi-users"></i> Usuários</a></li>
 			<li><a href="/settings"><i class="mdi mdi-settings"></i> Configurações</a></li>
 		</ul>
-	</div>
-	<div id="all-container">
-		
 	</div>
 </div>

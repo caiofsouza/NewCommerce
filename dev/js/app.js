@@ -70,10 +70,7 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
 
     $routeProvider
         .when('/', {
-            templateUrl: 'views/login.html',
-            controller: 'LoginCtrl',
-            title: "Login",
-            needAuth: false
+            redirectTo: '/login'
         })
         .when('/login', {
             templateUrl: 'views/login.html',
@@ -85,6 +82,12 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
             templateUrl: 'views/home.html',
             controller: 'HomeCtrl',
             title: "Home",
+            needAuth: true
+        })
+        .when('/messages', {
+            templateUrl: 'views/messages.html',
+            controller: 'MessagesCtrl',
+            title: "Mensagens",
             needAuth: true
         })
         .when('/products', {
@@ -121,6 +124,30 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
             templateUrl: 'views/category.html',
             controller: 'CategoryCtrl',
             title: "Categoria",
+            needAuth: true
+        })
+        .when('/banners', {
+            templateUrl: 'views/banners.html',
+            controller: 'BannersCtrl',
+            title: "Banners",
+            needAuth: true
+        })
+        .when('/banner/:banner_id', {
+            templateUrl: 'views/banner.html',
+            controller: 'BannerCtrl',
+            title: "Banner",
+            needAuth: true
+        })
+        .when('/users', {
+            templateUrl: 'views/users.html',
+            controller: 'UsersCtrl',
+            title: "Usuários",
+            needAuth: true
+        })
+        .when('/user/:user_id', {
+            templateUrl: 'views/user.html',
+            controller: 'UserCtrl',
+            title: "Usuário",
             needAuth: true
         })
         .when('/orders/:order_id', {

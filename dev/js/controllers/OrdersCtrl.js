@@ -2,7 +2,8 @@ app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
 	function($scope, $cookies, $location, $http){
 	var self = this;
 	self.allOrders = [];
-	
+	self.count = 0;
+
 	// user var to load header infos
 	self.user = JSON.parse($cookies.get('api_auth')).user;
 
@@ -23,7 +24,7 @@ app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
 				}
 
 				self.allOrders = arr_orders;
-
+				self.count = self.allOrders.length;
 			}
 		});
 	};

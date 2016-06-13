@@ -70,10 +70,7 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
 
     $routeProvider
         .when('/', {
-            templateUrl: 'views/login.html',
-            controller: 'LoginCtrl',
-            title: "Login",
-            needAuth: false
+            redirectTo: '/login'
         })
         .when('/login', {
             templateUrl: 'views/login.html',
@@ -85,6 +82,12 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
             templateUrl: 'views/home.html',
             controller: 'HomeCtrl',
             title: "Home",
+            needAuth: true
+        })
+        .when('/messages', {
+            templateUrl: 'views/messages.html',
+            controller: 'MessagesCtrl',
+            title: "Mensagens",
             needAuth: true
         })
         .when('/products', {
@@ -121,6 +124,30 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider',
             templateUrl: 'views/category.html',
             controller: 'CategoryCtrl',
             title: "Categoria",
+            needAuth: true
+        })
+        .when('/banners', {
+            templateUrl: 'views/banners.html',
+            controller: 'BannersCtrl',
+            title: "Banners",
+            needAuth: true
+        })
+        .when('/banner/:banner_id', {
+            templateUrl: 'views/banner.html',
+            controller: 'BannerCtrl',
+            title: "Banner",
+            needAuth: true
+        })
+        .when('/users', {
+            templateUrl: 'views/users.html',
+            controller: 'UsersCtrl',
+            title: "Usuários",
+            needAuth: true
+        })
+        .when('/user/:user_id', {
+            templateUrl: 'views/user.html',
+            controller: 'UserCtrl',
+            title: "Usuário",
             needAuth: true
         })
         .when('/orders/:order_id', {
@@ -203,6 +230,20 @@ app.run(['$rootScope','$location', '$route', 'Auth','$http', '$interval',
 
 
 
+app.controller('BannersCtrl', ['$cookies', '$location',
+	function($cookies, $location){
+	var self = this;
+
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+
+
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
+	
+}]);
 app.controller("CategoriesCtrl", ['$scope', '$cookies', '$location', '$http',
 	function($scope, $cookies, $location, $http){
 	var self = this;
@@ -376,11 +417,26 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http',
 	};
 
 }]);
+app.controller('MessagesCtrl', ['$cookies', '$location',
+	function($cookies, $location){
+	var self = this;
+
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+
+
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
+	
+}]);
 app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http', 
 	function($scope, $cookies, $location, $http){
 	var self = this;
 	self.allOrders = [];
-	
+	self.count = 0;
+
 	// user var to load header infos
 	self.user = JSON.parse($cookies.get('api_auth')).user;
 
@@ -401,7 +457,7 @@ app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
 				}
 
 				self.allOrders = arr_orders;
-
+				self.count = self.allOrders.length;
 			}
 		});
 	};
@@ -612,6 +668,17 @@ app.controller('ProductsCtrl', ['$cookies','$http', '$location',
 	var self = this;
 
 	self.user = JSON.parse($cookies.get('api_auth')).user;
+	self.reorder = 'cards'; // initial order of products grid
+
+	self.reorderInCards = function(){
+		console.log("reorder cards");
+		self.reorder = 'cards';
+	};
+
+	self.reorderInTable = function(){
+		console.log("reorder table");
+		self.reorder = 'table';
+	};
 
 	self.searchProduct = function(){
 		if(self.search_input != "" && self.search_input != undefined){
@@ -640,6 +707,30 @@ app.controller('ProductsCtrl', ['$cookies','$http', '$location',
 	self.count = 0;
 	self.getAllProducts();
 
+}]);
+app.controller('UserCtrl', ['$cookies', '$location',
+	function($cookies, $location){
+	var self = this;
+
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
+	
+}]);
+app.controller('UsersCtrl', ['$cookies', '$location',
+	function($cookies, $location){
+	var self = this;
+
+	self.user = JSON.parse($cookies.get('api_auth')).user;
+
+	self.logout = function(){
+		$cookies.remove('api_auth');
+		$location.path('/login');
+	};
+	
 }]);
 app.factory('Auth', ['$http', '$location', '$cookies',
     function($http, $location, $cookies) {  

@@ -184,6 +184,25 @@ img.loading-gif {
   display: initial;
   opacity: 1;
 }
+.start-hidden {
+  display: none;
+}
+@keyframes start-hidden {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.show-animation {
+  display: inherit;
+  animation: start-hidden 0.7s;
+  width: 100%;
+}
 .main-title {
   font-size: 19px;
   color: #F38F48;
@@ -206,6 +225,10 @@ a.btn-link-default:focus {
   text-decoration: none;
   color: #F38F48;
   background-color: #FFFFFF !important;
+}
+table td.text-center a.btn-link-default {
+  margin: 0 auto;
+  max-width: 150px;
 }
 .form-login {
   margin-top: 160px;
@@ -288,7 +311,7 @@ a.btn-link-default:focus {
   color: #F38F48;
 }
 #sidebar {
-  width: 200px;
+  width: 220px;
   text-align: center;
   min-height: 100%;
   background-color: #424242;
@@ -366,10 +389,10 @@ a.btn-link-default:focus {
   padding-left: 0px;
 }
 #all-container {
-  width: calc(100% - 200px);
+  width: calc(100% - 220px);
   padding: 20px;
-  margin-left: 200px;
-  min-width: 790px;
+  margin-left: 220px;
+  min-width: 890px;
 }
 #all-container #filter-bar {
   padding: 10px;
@@ -434,6 +457,7 @@ a.btn-link-default:focus {
 #all-container #products-grid-container {
   padding: 15px 0px;
   display: inline-block;
+  width: 100%;
 }
 #all-container #products-grid-container p {
   padding: 0px 10px 10px 10px;

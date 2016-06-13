@@ -15,6 +15,7 @@
 		<img src="https://pbs.twimg.com/profile_images/679444217203044353/UUFdHjia.jpg" alt="">
 		<ul>
 			<li><a href="/home"><i class="mdi mdi-chart-bar"></i> Dashboard</a></li>
+			<li><a href="/messages"><i class="mdi mdi-chat"></i> Mensagens</a></li>
 			<li class='dropdown selected'>
 				<a href="#"><i class="mdi mdi-shopping"></i> Produtos</a>
 				<ul class="dropdown-submenu opened">
@@ -28,7 +29,9 @@
 			</li>
 			<li><a href="/orders"><i class="mdi mdi-coin"></i> Pedidos</a></li>
 			<li><a href="/categories"><i class="mdi mdi-view-list"></i> Categorias</a></li>
+			<li><a href="/banners"><i class="mdi mdi-view-list"></i> Banners</a></li>
 			<li><a href="/marketing"><i class="mdi mdi-sale"></i> Marketing</a></li>
+			<li><a href="/users"><i class="mdi mdi-users"></i> Usuários</a></li>
 			<li><a href="/settings"><i class="mdi mdi-settings"></i> Configurações</a></li>
 		</ul>
 	</div>
@@ -43,10 +46,10 @@
 				</form>
 			</div>
 			<div class="grid-container">
-				<span class="card-container selected-grid">
+				<span class="card-container" ng-class="{ 'selected-grid' : products.reorder == 'cards' }" ng-click="products.reorderInCards()">
 					<a href="#"><i class="fa fa-th" aria-hidden="true"></i></a>
 				</span>
-				<span class="card-container">
+				<span class="card-container"  ng-class="{ 'selected-grid' : products.reorder == 'table' }" ng-click="products.reorderInTable()">
 					<a href="#"><i class="fa fa-list" aria-hidden="true"></i></a>
 				</span>
 			</div>
@@ -55,22 +58,51 @@
 			<p>
 				0-20 de <span ng-model="products.count" ng-bind="products.count"></span> Produtos
 			</p>
-			<div class="product card-container" ng-repeat="product in products.products">
-				<div class="image-mask card-container">
-					<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
+
+			<div class="start-hidden" ng-class="{ 'show-animation' : products.reorder == 'cards' }">
+				<div class="product card-container" ng-repeat="product in products.products">
+					<div class="image-mask card-container">
+						<img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt="">
+					</div>
+					<h3>{{ product.name | limitTo: 30 }}</h3>
+					
+					<span><strong>Código:</strong> {{ product.code }}</span>
+					<span><strong>Preço:</strong> {{ product.price | realCurrency }}</span>
+					<span><strong>Ativo:</strong> {{ product.active == true ? 'Sim' : 'Não' }}</span>
+					<p class="tag-cloud card-container">
+						<small>Tags:</small>
+						<span class="tag" ng-repeat="tag in product.tags"> {{ tag }}</span>
+					</p>
+					<a href="/product/{{ product._id }}" class='btn-link-default card-container'>Ver Produto</a>
 				</div>
-				<h3>{{ product.name | limitTo: 30 }}</h3>
-				
-				<span><strong>Código:</strong> {{ product.code }}</span>
-				<span><strong>Preço:</strong> {{ product.price | currency:"R$ " }}</span>
-				<span><strong>Ativo:</strong> {{ product.active == true ? 'Sim' : 'Não' }}</span>
-				<p class="tag-cloud card-container">
-					<small>Tags:</small>
-					<span class="tag" ng-repeat="tag in product.tags"> {{ tag }}</span>
-				</p>
-				<a href="/product/{{ product._id }}" class='btn-link-default card-container'>Ver Produto</a>
+			</div>
+
+			<div class="start-hidden" ng-class="{ 'show-animation' : products.reorder == 'table' }">
+				<table class="table table-bordered">
+					<thead>
+						<th>Imagem</th>
+						<th>Nome</th>
+						<th>Código</th>
+						<th>Preço</th>
+						<th>Ativo</th>
+						<th>Tags</th>
+						<th>Ver Mais</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="product in products.products">
+							<td><img src="http://stockfresh.com/thumbs/cteconsulting/474101_camisa-bolso-roupa-linha-arte-preto.jpg" alt=""></td>
+							<td>{{ product.name | limitTo: 30 }}</td>
+							<td>{{ product.code }}</td>
+							<td>{{ product.price | realCurrency }}</td>
+							<td>{{ product.active == true ? 'Sim' : 'Não' }}</td>
+							<td><span class="tag" ng-repeat="tag in product.tags"> {{ tag }}</span></td>
+							<td class="text-center"><a href="/product/{{ product._id }}" class='btn-link-default card-container'>Ver Produto</a></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			
 		</div>
+
 	</div>
 </div>
