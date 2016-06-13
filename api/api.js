@@ -282,8 +282,8 @@ router.route('/orders')
 	.get(function(req, res){
 
 		Order.find()
-		.sort({ date: -1})
-		.deepPopulate('user products.item')
+		.sort({ date: 1})
+		.deepPopulate('user')
 		.exec(function(err, orders){
 				res.status(200).send(orders);
 			});

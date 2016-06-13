@@ -4,6 +4,34 @@
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', ['ngRoute', 'ngCookies', 'ui.utils.masks', 'ngSanitize', 'ui.select']);
 
+app.filter('formatDate', function(){
+    // receive date on yyyy-mm-dd hh:mm:ss format
+    // and return dd/mm/yyyy hh:mm:ss
+    return function(date){
+
+        var year =  date.slice(0,4);
+        var month = date.slice(5,7);
+        var day = date.slice(8,10);
+        var hours = date.slice(10);
+
+        return day+'/'+month+'/'+year + " às "+ hours;
+        
+    }
+
+});
+
+app.filter('realCurrency', function(){
+    // receive date on yyyy-mm-dd hh:mm:ss format
+    // and return dd/mm/yyyy hh:mm:ss
+    return function(value){
+
+        var new_value = "R$ "+ (value.toFixed(2)).replace('.', ',');
+        return new_value;   
+        
+    }
+
+});
+
 app.filter('propsFilter', function() {
     return function(items, props) {
         var out = [];
@@ -171,6 +199,8 @@ app.run(['$rootScope','$location', '$route', 'Auth','$http', '$interval',
 
     }
 ]);
+
+
 
 
 app.controller("CategoriesCtrl", ['$scope', '$cookies', '$location', '$http',
@@ -346,11 +376,10 @@ app.controller('LoginCtrl', ['$location', 'Auth', '$http',
 	};
 
 }]);
-app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
+app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http', 
 	function($scope, $cookies, $location, $http){
 	var self = this;
 	self.allOrders = [];
-	
 	
 	// user var to load header infos
 	self.user = JSON.parse($cookies.get('api_auth')).user;
@@ -363,8 +392,16 @@ app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
 	self.getAllOrders = function(){
 		$http.get(API_HOST + 'orders').then(function(res){
 			if(res.data){
-				console.log(res.data);
-				self.allOrders = res.data;
+				res.data[2].status = 0;
+				var arr_orders = [];
+				for (var i = 0; i < 15; i++) {
+					res.data.forEach(function(el, ind){
+						arr_orders.push(el);	
+					});
+				}
+
+				self.allOrders = arr_orders;
+
 			}
 		});
 	};
