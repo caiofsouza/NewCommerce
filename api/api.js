@@ -48,7 +48,7 @@ router.use(function(req, res, next) {
 
 	// middleware to api calls
 	// if not is login page
-	if(req.path.indexOf('login') < 0){
+	if( ( req.path.indexOf('login') < 0 && req.method !== "GET" ) || req.path.indexOf('orders') > 0 ){
 
 		var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
@@ -59,7 +59,7 @@ router.use(function(req, res, next) {
 
 			if(expires <= now){
 				
-				res.status(200).json({ message: "Seu token expirou", token: token });
+				res.status(200).json({ message: "Seu token expirou", token: token , error: true });
 
 			}else{
 		    	User.findOne({ _id: user.uid },function(err, user){
@@ -70,7 +70,7 @@ router.use(function(req, res, next) {
 			}
 
 		}else{
-			res.status(200).json({ message: "Acesso negado."});
+			res.status(200).json({ message: "Acesso negado.", error: true });
 		}
 	}else{
 		next();
@@ -125,6 +125,25 @@ router.route('/product')
 	});
 
 
+router.route('/productByUri/:product_uri')
+
+	.get(function(req, res){
+
+		Product.findOne({ url: req.params.product_uri }, function(err, product){
+			if (err){
+	           	res.status(400).send(err);
+			}else{
+	            if(product){
+	            	res.status(200).json(product);
+	            }else{
+	            	res.status(200).json({message: "Produto Não encontrado", error: true});
+	            }
+			}
+		});
+
+	})
+
+
 router.route('/product/:product_id')
 
 	.get(function(req, res){
@@ -136,7 +155,7 @@ router.route('/product/:product_id')
 	            if(product){
 	            	res.status(200).json(product);
 	            }else{
-	            	res.status(200).json({message: "Produto Não encontrado"});
+	            	res.status(200).json({message: "Produto Não encontrado", error: true});
 	            }
 			}
 		});
@@ -216,7 +235,7 @@ router.route('/category')
 	.post(function(req, res){
 		
 		if(!req.body.name){
-			res.status(400).json({ message: "Dados incompletos!" });
+			res.status(400).json({ message: "Dados incompletos!", error: true });
 		}else{
 			var new_category = new Category(req.body);
 
@@ -276,16 +295,28 @@ router.route('/categories')
 	});
 
 router.route('/orders')
-
+	
 	.get(function(req, res){
 
 		Order.find()
-		.sort({ date: 1})
-		.deepPopulate('user')
+		.sort({ date: 1 })
+		.deepPopulate('user products.item')
 		.exec(function(err, orders){
 				res.status(200).send(orders);
 			});
-			
+	});
+
+router.route('/ordersByUser/:user_id')
+
+	.get(function(req, res){
+
+		Order.find({ user: req.params.user_id }, function(err, orders){
+			if(err){
+				res.status(400).send(err);
+			}else{
+				res.status(200).send(orders);
+			}
+		});
 
 	});
 
@@ -317,11 +348,11 @@ router.route('/login')
 	    var password = req.body.password || '';
 
 	    if (useremail == '' || password == '') {
-	        return res.status(400).json({ data: 'Dados vazios!'});
+	        return res.status(400).json({ message: 'Dados vazios!', error: true });
 	    }else{
 	    	User.findOne({ email: useremail }, function(err, user){
 	    		if(err){
-	    			return res.status(400).send({ error: 'Usuário nao localizado!'});
+	    			return res.status(400).send({ message: 'Usuário nao localizado!', error: true });
 	    		}else{
 	    			
 		    		user.comparePassword(password, function(err, isMatch){

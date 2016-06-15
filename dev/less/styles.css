@@ -498,6 +498,10 @@ table td.text-center a.btn-link-default {
 #all-container #products-grid-container .product .btn-link {
   margin-top: 20px;
 }
+#all-container #products-grid-container table img {
+  width: 50px;
+  heigh: 50px;
+}
 #all-container .tag-cloud {
   height: 70px;
   margin-top: 10px;
