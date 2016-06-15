@@ -48,7 +48,7 @@ router.use(function(req, res, next) {
 
 	// middleware to api calls
 	// if not is login page
-	if( ( req.path.indexOf('login') < 0 && req.method !== "GET" ) || req.path.indexOf('orders') > 0 ){
+	if( req.path.indexOf('login') < 0 ){
 
 		var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
@@ -358,7 +358,7 @@ router.route('/login')
 		    		user.comparePassword(password, function(err, isMatch){
 		    			if (err || isMatch == false){
 
-		    				return res.status(400).send({ error: isMatch});
+		    				return res.status(400).send({ error: true });
 
 		    			}else{
 
