@@ -291,7 +291,7 @@ router.route('/categories')
 			}else{
 	            res.status(200).send(categories);
 			}
-		});
+		}).sort({ name: 'asc' });
 	});
 
 router.route('/orders')
