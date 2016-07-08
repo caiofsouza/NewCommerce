@@ -1,21 +1,40 @@
 module.exports = function(grunt) {
 
+	require('load-grunt-tasks')(grunt);
+
 	grunt.initConfig({
+
+		shell: {
+			options: {
+				stderr: false
+			},
+			multiple: {
+				command: [  
+							'npm dedupe',
+							'pm2 kill',
+							'pm2 start server.js',
+							'pm2 start api/api.js',
+							'pm2 list'
+
+						].join('&&')
+			}
+		},
+
 		watch: {
 			gruntfile: {
-				files: 'Gruntfile.js',
+				files: ['Gruntfile.js'],
 				tasks: ['default'],
 			},
 			scripts:{
-				files: 'dev/js/**/*.js',
-			    tasks: ['concat:js', 'uglify'],
+				files: ['dev/js/**/*.js'],
+			    tasks: [ 'concat:js', 'uglify' ],
 			},
 			src: {
-				files: 'dev/views/**/*',
+				files: [ 'dev/views/**/*'],
 				tasks: ['concat:dist', 'copy'],
 			},
 			styles: {
-		        files: ['dev/less/styles.less'], // which files to watch
+		        files: [ 'dev/less/styles.less' ], // which files to watch
 		        tasks: ['less', 'cssmin'],
 		        options: {
 		        	nospawn: true
@@ -81,20 +100,7 @@ module.exports = function(grunt) {
 	});
 
 
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
-
-	// Register the default task.
-	grunt.registerTask("default", [ 
-		"concat", 
-		"uglify", 
-		"copy", 
-		"cssmin"
-	]);
-
+	grunt.registerTask("default", [ "concat", "uglify", "copy",	"cssmin"]);
+	grunt.registerTask("build", [ "default", "shell", "watch"]);
 
 };
