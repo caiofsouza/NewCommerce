@@ -10,7 +10,6 @@ module.exports = function(grunt) {
 			},
 			multiple: {
 				command: [  
-							'npm dedupe',
 							'pm2 kill',
 							'pm2 start server.js',
 							'pm2 start api/api.js',
@@ -52,14 +51,36 @@ module.exports = function(grunt) {
 			}
 		},
 		copy: {
-			files:{
-				cwd: 'dev/views',
-				src: ['**/*.html', '!comps/*.html'],
-				dest: 'public/views',
-				expand: true,
-				flatten: true,
-				filter: 'isFile'
-
+			main: {
+				files: [
+				{
+					cwd: "dev/views",
+					src: ['**/*.html', '!comps/*.html'],
+					dest: 'public/views',
+					expand: true,
+					flatten: true,
+					filter: 'isFile'
+				},
+				{
+					cwd: "bower_components",
+					src: [	
+						'angular/angular.min.js',
+						'angular/angular.min.js.map',
+						'angular-cookies/angular-cookies.min.js',
+						'angular-cookies/angular-cookies.min.js.map',
+						'angular-input-masks/angular-input-masks-standalone.min.js',
+						'angular-input-masks/angular-input-masks-standalone.min.js.map',
+						'angular-route/angular-route.min.js',
+						'angular-route/angular-route.min.js.map',
+						'angular-sanitize/angular-sanitize.min.js',
+						'angular-sanitize/angular-sanitize.min.js.map',
+						'jquery/dist/jquery.min.js'
+						],
+					dest: 'public/plugins',
+					expand: true,
+					flatten: true,
+					filter: 'isFile'
+				}]
 			}
 		},
 		uglify: {
@@ -100,7 +121,7 @@ module.exports = function(grunt) {
 	});
 
 
-	grunt.registerTask("default", [ "concat", "uglify", "copy",	"cssmin"]);
+	grunt.registerTask("default", [ "concat", "uglify", "copy", "cssmin"]);
 	grunt.registerTask("build", [ "default", "shell", "watch"]);
 
 };

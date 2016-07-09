@@ -1,0 +1,26 @@
+{
+  "name": "NewCommerce",
+  "description": "Dashboard with MEAN Stack",
+  "main": "index.html",
+  "authors": [
+    "Caio Fernandes"
+  ],
+  "license": "MIT",
+  "homepage": "index.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.5.5",
+    "jquery": "^3.1.0",
+    "angular-route": "^1.5.7",
+    "angular-cookies": "^1.5.7",
+    "angular-sanitize": "^1.5.7",
+    "angular-input-masks": "^2.4.0"
+  }
+}
