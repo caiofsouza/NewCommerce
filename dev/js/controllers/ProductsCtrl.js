@@ -39,6 +39,10 @@ app.controller('ProductsCtrl', ['$cookies','$http', '$location',
 		$location.path('/login');
 	};
 
+	self.uploadImage = function(){
+		
+	};
+
 	self.count = 0;
 	self.getAllProducts();
 

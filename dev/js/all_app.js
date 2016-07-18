@@ -3,7 +3,7 @@
 
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', 
-    ['ngRoute', 'ngCookies', 'ui.utils.masks', 'ngSanitize']);
+    ['ngRoute', 'ngCookies', 'ngSanitize', 'ngFileUpload']);
 
 app.filter('formatDate', function(){
     // receive date on yyyy-mm-dd hh:mm:ss format
@@ -231,18 +231,20 @@ app.run(['$rootScope','$location', '$route', 'Auth','$http', '$interval',
 
 
 
-app.controller('BannersCtrl', ['$cookies', '$location',
-	function($cookies, $location){
+app.controller('BannersCtrl', ['$cookies', '$location', '$http',
+	function($cookies, $location, $http){
 	var self = this;
 
 	self.user = JSON.parse($cookies.get('api_auth')).user;
-
-
+	self.progressPercentage = 0;
 
 	self.logout = function(){
 		$cookies.remove('api_auth');
 		$location.path('/login');
+
 	};
+
+
 	
 }]);
 app.controller("CategoriesCtrl", ['$scope', '$cookies', '$location', '$http',
@@ -473,8 +475,8 @@ app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
 
 
 
-app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',   
-	function($location, $routeParams, $cookies, $http){
+app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 'Upload', 
+	function($location, $routeParams, $cookies, $http, Upload){
 	var self = this; 
 	
 	// user var to load header infos
@@ -549,6 +551,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	self.save = function(){
 
 		self.validForm(function(hasError){
+
 			if(!hasError){
 				self.inLoading = true;
 				// if dont have any error
@@ -572,11 +575,14 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	self.update = function(){
 
 		self.validForm(function(hasError){
+
 			if(!hasError){
 				// if dont have any error
 				self.inLoading = true;
 				
 				$http.put(API_HOST + 'product/'+self.product._id, self.product ).then(function(res){
+					self.uploadProductImg( self.product._id );
+
 					if(res.data.message){
 						self.messageError = "Produto alterado com sucesso!";
 						self.product = res.data.result;
@@ -657,6 +663,30 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 		}
 	};
 
+	self.uploadProductImg = function() {
+
+  		if (self.product.files) {
+  			var files = self.product.files;
+  			console.log(files, self.product);
+  			for (var i = 0; i < files.length; i++) {
+		        Upload.upload({
+		            url: API_HOST + 'product-upload/',
+		            data: { file_uploaded: files[i], 'product_id': self.product._id }
+		        }).then(function (res) {
+		        	console.log(res);
+		            console.log('Success ' + res.config.data.file_uploaded.name + 'uploaded. Response: ' + res.data);
+		        }, function (res) {
+		            console.log('Error status: ' + res.status);
+		        }, function (evt) {
+		        	console.log(evt);
+		            self.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+		            console.log('progress: ' + self.progressPercentage + '% ' + evt.config.data.file_uploaded.name);
+		        });
+	        }
+      	}
+
+    };
+
 	self.logout = function(){
 		$cookies.remove('api_auth');
 		$location.path('/login');
@@ -703,6 +733,10 @@ app.controller('ProductsCtrl', ['$cookies','$http', '$location',
 	self.logout = function(){
 		$cookies.remove('api_auth');
 		$location.path('/login');
+	};
+
+	self.uploadImage = function(){
+		
 	};
 
 	self.count = 0;

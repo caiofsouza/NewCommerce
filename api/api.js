@@ -3,6 +3,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var jwt = require('jwt-simple');
 var moment = require('moment');
+var fs = require('fs');
+var formidable = require('formidable');
 
 var app = express();
 
@@ -62,11 +64,11 @@ router.use(function(req, res, next) {
 				res.status(200).json({ message: "Seu token expirou", token: token , error: true });
 
 			}else{
-		    	User.findOne({ _id: user.uid },function(err, user){
-		    		if(user){
-		    			next();
-		    		}
-		    	});
+				User.findOne({ _id: user.uid },function(err, user){
+					if(user){
+						next();
+					}
+				});
 			}
 
 		}else{
@@ -81,19 +83,19 @@ router.use(function(req, res, next) {
 
 router.route('/product')
 
-	.post(function(req, res) {
+.post(function(req, res) {
 
-		if(req.body != undefined && req.body != ""){
-			var new_product = new Product(req.body);
+	if(req.body != undefined && req.body != ""){
+		var new_product = new Product(req.body);
 
 
-			new_product.url = new_product.name.toLowerCase();
-			new_product.url = new_product.url.replace(/[^\w\s]/gi,"").replace(/\s/g, "-");
+		new_product.url = new_product.name.toLowerCase();
+		new_product.url = new_product.url.replace(/[^\w\s]/gi,"").replace(/\s/g, "-");
 
-			Product.findOne({ url: new_product.url }, function(err, product){
-				if (err){
-		        	res.status(400).send(err);
-		        }else{
+		Product.findOne({ url: new_product.url }, function(err, product){
+			if (err){
+				res.status(400).send(err);
+			}else{
 		        	// if have a product with the same url
 		        	if(product != null){
 		        		// change url to dont be equal
@@ -102,295 +104,360 @@ router.route('/product')
 		        	}
 
 		        	new_product.save(function(err){
-						if (err){
-				        	res.status(400).send(err);
-				        }else{
+		        		if (err){
+		        			res.status(400).send(err);
+		        		}else{
 
-						    Product.findOne({ url: new_product.url  }, function(err, product) {
-						        if (err){
-						        	res.status(400).send(err);
-						        }else{
-						        	res.json({"result": product});
-						        }
+		        			Product.findOne({ url: new_product.url  }, function(err, product) {
+		        				if (err){
+		        					res.status(400).send(err);
+		        				}else{
+		        					res.json({"result": product});
+		        				}
 
-							});
+		        			});
 
-				        }
-					});
-				}
+		        		}
+		        	});
+		        }
 
-        	});
+		    });
 
-		}
-	});
+	}
+});
 
 
 router.route('/productByUri/:product_uri')
 
-	.get(function(req, res){
+.get(function(req, res){
 
-		Product.findOne({ url: req.params.product_uri }, function(err, product){
-			if (err){
-	           	res.status(400).send(err);
+	Product.findOne({ url: req.params.product_uri }, function(err, product){
+		if (err){
+			res.status(400).send(err);
+		}else{
+			if(product){
+				res.status(200).json(product);
 			}else{
-	            if(product){
-	            	res.status(200).json(product);
-	            }else{
-	            	res.status(200).json({message: "Produto Não encontrado", error: true});
-	            }
+				res.status(200).json({message: "Produto Não encontrado", error: true});
 			}
-		});
+		}
+	});
 
-	})
+})
 
 
 router.route('/product/:product_id')
 
-	.get(function(req, res){
+.get(function(req, res){
 
-		Product.findById(req.params.product_id, function(err, product){
-			if (err){
-	           	res.status(400).send(err);
-			}else{
-	            if(product){
-	            	res.status(200).json(product);
-	            }else{
-	            	res.status(200).json({message: "Produto Não encontrado", error: true});
-	            }
-			}
-		});
-
-	})
-
-	.put(function(req, res){
-
-		Product.findById(req.params.product_id, function(err, product) {
-
-            if (err){
-                res.send(err);
-            }else{
-
-
-            	product.name = req.body.name;
-            	product.code = req.body.code;
-            	product.price = req.body.price;
-            	product.stock = req.body.stock;
-            	product.description = req.body.description;
-
-            	if(req.body.url == undefined || req.body.url == ""){
-            		product.url = product.name.toLowerCase();
-					product.url = product.url.replace(/[^\w\s]/gi,"").replace(/\s/g, "-");
-            	}else{
-            		product.url = req.body.url;
-            	}
-
-            	product.categories = req.body.categories;
-            	product.tags = req.body.tags;
-            	product.available_marketplace = req.body.available_marketplace;
-            	product.active = req.body.active;
-
-	            // save the product
-	            product.save(function(err) {
-	                if (err){
-	                    res.send(err);
-	                }else{
-	                	res.status(200).json({ message: "Produto Atualizado!", result: product });
-	                }
-
-	            });
-            	
-            }
-
-        });
-
-	});
-
-router.route('/products')
-
-	.get(function(req, res) {
-
-		Product.find(function(err, products){
-			if (err){
-	           	res.status(400).send(err);
-			}else{
-	            res.status(200).send(products);
-			}
-		});
-	});
-
-router.route('/tags')
-
-	.get(function(req, res){
-		Product.find().distinct("tags", function(err, tags){
-			if (err){
-	           	res.status(400).send(err);
-			}else{
-	            res.status(200).send(tags);
-			}
-		});
-	});
-
-router.route('/category')
-
-	.post(function(req, res){
-		
-		if(!req.body.name){
-			res.status(400).json({ message: "Dados incompletos!", error: true });
+	Product.findById(req.params.product_id, function(err, product){
+		if (err){
+			res.status(400).send(err);
 		}else{
-			var new_category = new Category(req.body);
-
-			new_category.save(function(err){
-				if (err){
-		        	res.status(400).send(err);
-		        }else{
-
-				    Category.findOne().sort('-_id').exec(function(err, category) {
-
-				        if (err){
-				        	res.status(400).send(err);
-				        }else{
-				        	res.json({result: category});
-				        }
-
-					});
-
-		        }
-			});
+			if(product){
+				res.status(200).json(product);
+			}else{
+				res.status(200).json({message: "Produto Não encontrado", error: true});
+			}
 		}
 	});
 
-router.route('/category/:category_id')
+})
 
-	.put(function(req, res){
+.put(function(req, res){
 
-		Category.findById(req.params.category_id, function(err, category){
-			if(err){
-				res.send(err);
+	Product.findById(req.params.product_id, function(err, product) {
+
+		if (err){
+			res.send(err);
+		}else{
+
+
+			product.name = req.body.name;
+			product.code = req.body.code;
+			product.price = req.body.price;
+			product.stock = req.body.stock;
+			product.description = req.body.description;
+
+			if(req.body.images){
+				product.images = req.body.images;
+			}
+
+			if(req.body.url == undefined || req.body.url == ""){
+				product.url = product.name.toLowerCase();
+				product.url = product.url.replace(/[^\w\s]/gi,"").replace(/\s/g, "-");
 			}else{
-				category.name = req.body.name;
-				category.sub_cats = req.body.sub_cats;
+				product.url = req.body.url;
+			}
 
-				category.save(function(err){
-					if(err){
+			product.categories = req.body.categories;
+			product.tags = req.body.tags;
+			product.available_marketplace = req.body.available_marketplace;
+			product.active = req.body.active;
+
+            // save the product
+            product.save(function(err) {
+            	if (err){
+            		res.send(err);
+            	}else{
+            		res.status(200).json({ message: "Produto Atualizado!", result: product });
+            	}
+
+            });
+
+        }
+
+    });
+
+});
+
+router.route('/products')
+
+.get(function(req, res) {
+
+	Product.find(function(err, products){
+		if (err){
+			res.status(400).send(err);
+		}else{
+			res.status(200).send(products);
+		}
+	});
+});
+
+router.route('/tags')
+
+.get(function(req, res){
+	Product.find().distinct("tags", function(err, tags){
+		if (err){
+			res.status(400).send(err);
+		}else{
+			res.status(200).send(tags);
+		}
+	});
+});
+
+router.route('/category')
+
+.post(function(req, res){
+
+	if(!req.body.name){
+		res.status(400).json({ message: "Dados incompletos!", error: true });
+	}else{
+		var new_category = new Category(req.body);
+
+		new_category.save(function(err){
+			if (err){
+				res.status(400).send(err);
+			}else{
+
+				Category.findOne().sort('-_id').exec(function(err, category) {
+
+					if (err){
 						res.status(400).send(err);
 					}else{
-						res.json({message: "Salvo com sucesso!", result: category});
+						res.json({result: category});
 					}
-				})
+
+				});
+
 			}
-		})
-	});
+		});
+	}
+});
+
+router.route('/category/:category_id')
+
+.put(function(req, res){
+
+	Category.findById(req.params.category_id, function(err, category){
+		if(err){
+			res.send(err);
+		}else{
+			category.name = req.body.name;
+			category.sub_cats = req.body.sub_cats;
+
+			category.save(function(err){
+				if(err){
+					res.status(400).send(err);
+				}else{
+					res.json({message: "Salvo com sucesso!", result: category});
+				}
+			})
+		}
+	})
+});
 
 router.route('/categories')
 
-	.get(function(req, res){
+.get(function(req, res){
 
-		Category.find(function(err, categories){
-			if (err){
-	           	res.status(400).send(err);
-			}else{
-	            res.status(200).send(categories);
-			}
-		}).sort({ name: 'asc' });
-	});
+	Category.find(function(err, categories){
+		if (err){
+			res.status(400).send(err);
+		}else{
+			res.status(200).send(categories);
+		}
+	}).sort({ name: 'asc' });
+});
 
 router.route('/orders')
-	
-	.get(function(req, res){
 
-		Order.find()
-		.sort({ date: 1 })
-		.deepPopulate('user products.item')
-		.exec(function(err, orders){
-				res.status(200).send(orders);
-			});
+.get(function(req, res){
+
+	Order.find()
+	.sort({ date: 1 })
+	.deepPopulate('user products.item')
+	.exec(function(err, orders){
+		res.status(200).send(orders);
 	});
+});
 
 router.route('/ordersByUser/:user_id')
 
-	.get(function(req, res){
+.get(function(req, res){
 
-		Order.find({ user: req.params.user_id }, function(err, orders){
-			if(err){
-				res.status(400).send(err);
-			}else{
-				res.status(200).send(orders);
-			}
-		});
-
+	Order.find({ user: req.params.user_id }, function(err, orders){
+		if(err){
+			res.status(400).send(err);
+		}else{
+			res.status(200).send(orders);
+		}
 	});
+
+});
 
 router.route('/search-products/:search')
 
-	.get(function(req, res){
+.get(function(req, res){
 
-		var regex = new RegExp(req.params.search, 'i');
+	var regex = new RegExp(req.params.search, 'i');
 		// find all products using regex and query only by name and description 
 		Product.find()
 		.or(
 			[
-				{ 'name': { $regex: regex } }, 
-				{ 'code': { $regex: regex } },
-				{ 'description': { $regex: regex } },
-				{ 'tags': { $regex: regex } }
+			{ 'name': { $regex: regex } }, 
+			{ 'code': { $regex: regex } },
+			{ 'description': { $regex: regex } },
+			{ 'tags': { $regex: regex } }
 
 			]).exec(function(err, products) {
-		    	res.json(products);
-		});
+				res.json(products);
+			});
 
-	});
+		});
 
 
 router.route('/login')
 
-	.post(function(req, res){
-		var useremail = req.body.email || '';
-	    var password = req.body.password || '';
+.post(function(req, res){
+	var useremail = req.body.email || '';
+	var password = req.body.password || '';
 
-	    if (useremail == '' || password == '') {
-	        return res.status(400).json({ message: 'Dados vazios!', error: true });
-	    }else{
-	    	User.findOne({ email: useremail }, function(err, user){
-	    		if(err){
-	    			return res.status(400).send({ message: 'Usuário nao localizado!', error: true });
-	    		}else{
-	    			
-		    		user.comparePassword(password, function(err, isMatch){
-		    			if (err || isMatch == false){
+	if (useremail == '' || password == '') {
+		return res.status(400).json({ message: 'Dados vazios!', error: true });
+	}else{
+		User.findOne({ email: useremail }, function(err, user){
+			if(err){
+				return res.status(400).send({ message: 'Usuário nao localizado!', error: true });
+			}else{
 
-		    				return res.status(400).send({ error: true });
+				user.comparePassword(password, function(err, isMatch){
+					if (err || isMatch == false){
 
-		    			}else{
+						return res.status(400).send({ error: true });
 
-							var user_obj = {
-					            email: user.email,
-					            id: user._id
-					        };
-					        
-					        var expires = moment().add(7, 'days').valueOf();
+					}else{
 
-					        var token = jwt.encode({
-					            uid: user_obj.id,
-					            exp: expires
-					        }, SECRET_KEY);
+						var user_obj = {
+							email: user.email,
+							id: user._id
+						};
 
-					        
-					        return res.status(200).send({
-					            token: token,
-					            expires: expires,
-					            user: user_obj
-					        });      		
+						var expires = moment().add(7, 'days').valueOf();
 
-		    			}
-						
-		    		});
-	    			
-	    		}
+						var token = jwt.encode({
+							uid: user_obj.id,
+							exp: expires
+						}, SECRET_KEY);
 
-	    	});
 
-	    }
-	});	
+						return res.status(200).send({
+							token: token,
+							expires: expires,
+							user: user_obj
+						});      		
+
+					}
+
+				});
+
+			}
+
+		});
+
+	}
+});	
+
+router.post('/product-upload', function (req, res) {
+	var form = new formidable.IncomingForm();
+	var notAllowSpecialChars = /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\?|\/|\""|\;|\:|\_|\s/g;
+
+	form.parse(req, function(err, fields, archive) {
+
+		res.writeHead(200, {'content-type': 'text/plain'});
+		var image = archive.file_uploaded;
+		var image_upload_path_old = image.path;
+		var image_upload_path_new = '../public/images/';
+
+		var image_upload_name = fields.product_id + '-' + moment() + '-' +
+								image.name.replace(notAllowSpecialChars, '').toLowerCase();
+
+		var image_upload_path_name = image_upload_path_new + image_upload_name;
+
+		// console.log(image_upload_name);
+
+		
+		if (fs.existsSync(image_upload_path_new)) {
+			fs.rename(
+				image_upload_path_old,
+				image_upload_path_name,
+				function (err) {
+					if (err) {
+						res.json({message: "Error: "+err, error: true});
+					}
+				});
+		}else {
+			fs.mkdir(image_upload_path_new, function (err) {
+				if (err) {
+					res.json({message: "Error: "+err, error: true});
+				}else{
+
+					fs.rename(
+						image_upload_path_old,
+						image_upload_path_name,
+						function(err) {
+							res.json({message: "Error: "+err, error: true});
+						});
+				}
+			});
+		}
+		
+
+		Product.findById(fields.product_id, function(err, product) {
+			if(err){
+				res.send(err);
+			}else{
+				if(!product.images){
+					product.images = [];
+				}
+				if(product.images.indexOf(image_upload_name) < 0){
+					product.images.push(image_upload_name);
+				}
+				product.save();
+			}
+		});
+	});
+});
 
 
 
@@ -421,7 +488,7 @@ router.route('/login')
 
 // 	        }
 
-			
+
 // 		});
 
 

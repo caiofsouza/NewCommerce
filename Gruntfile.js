@@ -10,6 +10,9 @@ module.exports = function(grunt) {
 			},
 			multiple: {
 				command: [  
+							'cd api',
+							'npm install',
+							'cd ..',
 							'pm2 kill',
 							'pm2 start server.js',
 							'pm2 start api/api.js',
@@ -74,6 +77,8 @@ module.exports = function(grunt) {
 						'angular-route/angular-route.min.js.map',
 						'angular-sanitize/angular-sanitize.min.js',
 						'angular-sanitize/angular-sanitize.min.js.map',
+						'ng-file-upload/ng-file-upload.min.js',
+						'ng-file-upload/ng-file-upload-shim.min.js',
 						'jquery/dist/jquery.min.js'
 						],
 					dest: 'public/plugins',

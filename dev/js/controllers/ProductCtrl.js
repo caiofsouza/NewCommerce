@@ -1,5 +1,5 @@
-app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',   
-	function($location, $routeParams, $cookies, $http){
+app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 'Upload', 
+	function($location, $routeParams, $cookies, $http, Upload){
 	var self = this; 
 	
 	// user var to load header infos
@@ -74,6 +74,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	self.save = function(){
 
 		self.validForm(function(hasError){
+
 			if(!hasError){
 				self.inLoading = true;
 				// if dont have any error
@@ -97,11 +98,14 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 	self.update = function(){
 
 		self.validForm(function(hasError){
+
 			if(!hasError){
 				// if dont have any error
 				self.inLoading = true;
 				
 				$http.put(API_HOST + 'product/'+self.product._id, self.product ).then(function(res){
+					self.uploadProductImg( self.product._id );
+
 					if(res.data.message){
 						self.messageError = "Produto alterado com sucesso!";
 						self.product = res.data.result;
@@ -181,6 +185,30 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http',
 			self.product.tags = tags;
 		}
 	};
+
+	self.uploadProductImg = function() {
+
+  		if (self.product.files) {
+  			var files = self.product.files;
+  			console.log(files, self.product);
+  			for (var i = 0; i < files.length; i++) {
+		        Upload.upload({
+		            url: API_HOST + 'product-upload/',
+		            data: { file_uploaded: files[i], 'product_id': self.product._id }
+		        }).then(function (res) {
+		        	console.log(res);
+		            console.log('Success ' + res.config.data.file_uploaded.name + 'uploaded. Response: ' + res.data);
+		        }, function (res) {
+		            console.log('Error status: ' + res.status);
+		        }, function (evt) {
+		        	console.log(evt);
+		            self.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+		            console.log('progress: ' + self.progressPercentage + '% ' + evt.config.data.file_uploaded.name);
+		        });
+	        }
+      	}
+
+    };
 
 	self.logout = function(){
 		$cookies.remove('api_auth');

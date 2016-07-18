@@ -15,7 +15,7 @@
 		<img src="https://pbs.twimg.com/profile_images/679444217203044353/UUFdHjia.jpg" alt="">
 		<ul>
 			<li><a href="/home"><i class="mdi mdi-chart-bar"></i> Dashboard</a></li>
-<li><a href="/messages"><i class="mdi mdi-chat"></i> Mensagens</a></li>
+			<li><a href="/messages"><i class="mdi mdi-chat"></i> Mensagens</a></li>
 			<li class='dropdown selected'>
 				<a href="#"><i class="mdi mdi-shopping"></i> Produtos</a>
 				<ul class="dropdown-submenu opened">
@@ -31,7 +31,7 @@
 			<li><a href="/categories"><i class="mdi mdi-view-list"></i> Categorias</a></li>
 			<li><a href="/banners"><i class="mdi mdi-view-list"></i> Banners</a></li>
 			<li><a href="/marketing"><i class="mdi mdi-sale"></i> Marketing</a></li>
-<li><a href="/users"><i class="mdi mdi-users"></i> Usuários</a></li>
+			<li><a href="/users"><i class="mdi mdi-users"></i> Usuários</a></li>
 			<li><a href="/settings"><i class="mdi mdi-settings"></i> Configurações</a></li>
 		</ul>
 	</div>
@@ -85,22 +85,10 @@
 					<div class="row-simple">
 						<div class="form-group half-col">
 							<label>Categorias</label>
-						    <ui-select multiple ng-model="singleProduct.product.categories" theme="bootstrap" close-on-select="false" sortable="true">
-					    		<ui-select-match placeholder="Categorias">{{ $item.name }}</ui-select-match>
-					    		<ui-select-choices repeat="category in singleProduct.allCategories | propsFilter: { name: $select.search } track by category._id">
-							    	{{ category.name | highlight: $select.search }}
-							    </ui-select-choices>
-						    </ui-select>
 						</div>
 
 						<div class="form-group half-col">
 							<label>Tags</label>
-					 		<ui-select multiple tagging tagging-label="false" ng-model="singleProduct.product.tags" theme="bootstrap" sortable="true" ng-change="singleProduct.tagsToLower()">
-					    		<ui-select-match>{{$item}}</ui-select-match>
-					    		<ui-select-choices repeat="tag in singleProduct.product.tags | filter: $select.search">
-							       {{ tag }}
-							    </ui-select-choices>
-					  		</ui-select>
 						</div>
 					</div>
 					
@@ -117,6 +105,14 @@
 								<input type="checkbox" name="active" ng-model="singleProduct.product.active">
 								Ativo
 							</label>
+						</div>
+					</div>
+
+					<div class="row-simple">
+						<div class="form-group half-col">
+							{{ singleProduct.product.progressPercentage }}
+						    <div class="button" ngf-select ng-model="singleProduct.product.files" ngf-multiple="true" 
+						    ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="5mb" ngf-min-height="100">Select</div>
 						</div>
 					</div>
 

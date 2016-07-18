@@ -3,7 +3,7 @@
 
 var API_HOST = 'http://localhost:3000/api/';
 var app = angular.module('newCommerce', 
-    ['ngRoute', 'ngCookies', 'ui.utils.masks', 'ngSanitize']);
+    ['ngRoute', 'ngCookies', 'ngSanitize', 'ngFileUpload']);
 
 app.filter('formatDate', function(){
     // receive date on yyyy-mm-dd hh:mm:ss format
