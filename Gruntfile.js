@@ -11,8 +11,9 @@ module.exports = function(grunt) {
 			multiple: {
 				command: [  
 							'cd api',
-							'npm install',
+							'sudo npm install',
 							'cd ..',
+							'mongorestore dump',
 							'pm2 kill',
 							'pm2 start server.js',
 							'pm2 start api/api.js',
