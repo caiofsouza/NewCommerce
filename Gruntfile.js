@@ -13,7 +13,6 @@ module.exports = function(grunt) {
 							'cd api',
 							'sudo npm install',
 							'cd ..',
-							'mongorestore dump',
 							'pm2 kill',
 							'pm2 start server.js',
 							'pm2 start api/api.js',

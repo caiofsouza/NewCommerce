@@ -400,21 +400,18 @@ router.route('/login')
 
 router.post('/product-upload', function (req, res) {
 	var form = new formidable.IncomingForm();
-	var notAllowSpecialChars = /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\.|\>|\?|\/|\""|\;|\:|\_|\s/g;
+	var notAllowSpecialChars = /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\>|\?|\/|\""|\;|\:|\_|\s/g;
 
 	form.parse(req, function(err, fields, archive) {
 
-		res.writeHead(200, {'content-type': 'text/plain'});
 		var image = archive.file_uploaded;
 		var image_upload_path_old = image.path;
 		var image_upload_path_new = '../public/images/';
 
-		var image_upload_name = fields.product_id + '-' + moment() + '-' +
-								image.name.replace(notAllowSpecialChars, '').toLowerCase();
+		var image_upload_name = fields.product_id + '-' + moment() + '-' + 
+							image.name.replace(notAllowSpecialChars, '').toLowerCase();
 
 		var image_upload_path_name = image_upload_path_new + image_upload_name;
-
-		// console.log(image_upload_name);
 
 		
 		if (fs.existsSync(image_upload_path_new)) {

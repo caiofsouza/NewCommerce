@@ -115,7 +115,8 @@ body {
   padding: 5px;
   float: left;
 }
-.form-group button {
+.form-group button,
+.form-group .upload-button {
   background-color: #F38F48;
   height: 40px;
   border-radius: 3px;
@@ -127,10 +128,16 @@ body {
   cursor: pointer;
 }
 .form-group button:hover,
+.form-group .upload-button:hover,
 .form-group button:focus,
-.form-group button:active {
+.form-group .upload-button:focus,
+.form-group button:active,
+.form-group .upload-button:active {
   background-color: #FFFFFF;
   color: #F38F48;
+}
+.form-group .upload-button {
+  line-height: 40px;
 }
 .form-group.error_input label,
 .form-group.error_input span {
@@ -154,9 +161,52 @@ img.loading-gif {
   font-weight: 300;
   color: #121212;
 }
-.card-container {
+.card-container,
+.card-image-container,
+.card-image-preview-container {
   background-color: #ffffff;
   box-shadow: 1px 1px 2px 1px #C5C5C5;
+}
+.card-image-container {
+  width: 180px;
+  margin-left: 15px;
+  margin-top: 15px;
+  float: left;
+}
+.card-image-container .image-content {
+  width: 100%;
+  height: 120px;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+.card-image-container .image-content img {
+  height: 100%;
+}
+.card-image-container .image-content a {
+  position: absolute;
+  top: 90px;
+  left: 115px;
+  color: #F93636;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 5px;
+  box-sizing: border-box;
+}
+.card-image-preview-container {
+  width: 150px;
+  height: 120px;
+  margin-left: 15px;
+  margin-top: 15px;
+  float: left;
+}
+.card-image-preview-container .image-content {
+  width: 100%;
+  height: 120px;
+  text-align: center;
+  overflow: hidden;
+}
+.card-image-preview-container .image-content img {
+  height: 100%;
 }
 .row-simple {
   display: inline-block;

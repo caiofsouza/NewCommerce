@@ -38,9 +38,13 @@
 	<div id="all-container">
 		<div class="new-product-container">
 			<div id="new-product-images">
-				<div class="card-container">
-					
-					
+				<div class="card-image-container" ng-repeat="images in singleProduct.product.images track by $index">
+					<div class="image-content">
+							<a href="javascript:;" ng-click="singleProduct.removeImages($index)">
+								Remover
+							</a>
+						<img src="/images/{{ images }}" alt="">
+					</div>
 				</div>
 			</div>
 			<div id="new-product-form">
@@ -107,18 +111,40 @@
 							</label>
 						</div>
 					</div>
-
+				
 					<div class="row-simple">
-						<div class="form-group half-col">
-							{{ singleProduct.product.progressPercentage }}
-						    <div class="button" ngf-select ng-model="singleProduct.product.files" ngf-multiple="true" 
-						    ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="5mb" ngf-min-height="100">Select</div>
+						<div class="form-group">
+							<div class="card-image-preview-container" ng-repeat="singlePreview in singleProduct.previewUploadImages">
+								<div class="image-content">
+									<a href="javascript:;" ng-click="singleProduct.removePreview($index)">
+										Remover
+									</a>
+									<img src="{{ singlePreview.$ngfBlobUrl }}" alt="">
+								</div>
+								<span class="product-upload-progress">{{ singlePreview.progress }}</span>
+							</div>
 						</div>
 					</div>
 
-					<div class="form-group text-left">
-						<button type="submit">Salvar</button>
+					<div class="row-simple">
+						<div class="form-group half-col">
+						    <div class="upload-button text-center" 
+						    ngf-select 
+						    ng-model="singleProduct.product.files" 
+						    ngf-multiple="true" 
+						    ngf-change="singleProduct.checkFiles($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)" 
+						    ngf-pattern="'image/*'" 
+						    ngf-accept="'image/*'" 
+						    ngf-max-size="20MB" 
+						    ngf-min-height="15" 
+						    ngf-max-files="30">
+						    Selecionar Arquivos</div>
+						</div>
+						<div class="form-group text-right half-col">
+							<button type="submit">Salvar</button>
+						</div>
 					</div>
+					{{ singleProduct.product.files.length }} Arquivos Selecionados <br>
 				</form>
 			</div>
 		</div>

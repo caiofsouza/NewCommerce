@@ -475,19 +475,23 @@ app.controller("OrdersCtrl", ['$scope', '$cookies', '$location', '$http',
 
 
 
-app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 'Upload', 
-	function($location, $routeParams, $cookies, $http, Upload){
+app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 'Upload', '$timeout',
+	function($location, $routeParams, $cookies, $http, Upload, $timeout){
 	var self = this; 
 	
 	// user var to load header infos
 	self.user = JSON.parse($cookies.get('api_auth')).user;
 	self.messageError = "";
+	self.uploadProgressBar = "0%";
+	self.selectedFiles = 0;
 
 	self.product = {
 		available_marketplace: false,
 		active: false,
 		tags: []
 	};
+
+	self.previewUploadImages = [];
 
 	self.inLoading = false;
 
@@ -534,8 +538,6 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 
 			// return res.data;
 			self.product = res.data;
 			
-			console.log(self.product.categories);
-
 			self.selectedCategories = self.product.categories;
 			self.inLoading = false;
 		});
@@ -555,9 +557,10 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 
 			if(!hasError){
 				self.inLoading = true;
 				// if dont have any error
-				console.log(self.product);
 				$http.post(API_HOST + 'product/', self.product).then(function(res){
 					if(res.data.result){
+						self.uploadProductImg( res.data.result._id );
+
 						self.messageError = "Produto adicionado com sucesso!";
 						self.product = {
 							available_marketplace: false,
@@ -581,7 +584,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 
 				self.inLoading = true;
 				
 				$http.put(API_HOST + 'product/'+self.product._id, self.product ).then(function(res){
-					self.uploadProductImg( self.product._id );
+					self.uploadProductImg();
 
 					if(res.data.message){
 						self.messageError = "Produto alterado com sucesso!";
@@ -667,24 +670,49 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 
 
   		if (self.product.files) {
   			var files = self.product.files;
-  			console.log(files, self.product);
-  			for (var i = 0; i < files.length; i++) {
-		        Upload.upload({
+
+  			angular.forEach(files, function(file){
+
+  				file.upload = Upload.upload({
 		            url: API_HOST + 'product-upload/',
-		            data: { file_uploaded: files[i], 'product_id': self.product._id }
-		        }).then(function (res) {
-		        	console.log(res);
-		            console.log('Success ' + res.config.data.file_uploaded.name + 'uploaded. Response: ' + res.data);
-		        }, function (res) {
-		            console.log('Error status: ' + res.status);
-		        }, function (evt) {
-		        	console.log(evt);
-		            self.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-		            console.log('progress: ' + self.progressPercentage + '% ' + evt.config.data.file_uploaded.name);
+		            data: { file_uploaded: file, 'product_id': self.product._id }
 		        });
-	        }
+
+		        file.upload.then(function (res) {
+
+		        	$timeout(function(){
+			            console.log('Success ' + res.config.data.file_uploaded.name + 'uploaded. Response: ' + res.data);
+                    });
+
+		        }, function (res) {
+
+		            console.log('Error status: ' + res.status);
+
+		        }, function (evt) {
+		            file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total)) + "%";
+
+		        });
+
+  			});
       	}
 
+    };
+
+    self.checkFiles = function($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event){
+    	self.product.files.forEach(function(el, idx){
+    		el.progress = 0;
+    		self.previewUploadImages.push(el);
+    	});
+    	console.log(self.previewUploadImages);
+	};
+
+    self.removePreview = function(previewIndex){
+    	self.previewUploadImages.splice(previewIndex, 1);
+    	self.product.files.splice(previewIndex, 1);
+    };
+
+    self.removeImages = function(imageIndex){
+    	self.product.images.splice(imageIndex, 1);
     };
 
 	self.logout = function(){
