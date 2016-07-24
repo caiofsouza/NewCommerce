@@ -1,12 +1,12 @@
-app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 'Upload', '$timeout',
-	function($location, $routeParams, $cookies, $http, Upload, $timeout){
+app.controller('ProductCtrl', 
+	['$location','$routeParams', '$cookies', '$http', 'Upload', '$timeout', 'fileUploadProduct',
+	function($location, $routeParams, $cookies, $http, Upload, $timeout, fileUploadProduct){
 	var self = this; 
 	
 	// user var to load header infos
 	self.user = JSON.parse($cookies.get('api_auth')).user;
 	self.messageError = "";
 	self.uploadProgressBar = "0%";
-	self.selectedFiles = 0;
 
 	self.product = {
 		available_marketplace: false,
@@ -90,6 +90,7 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 
 							active: false,
 							tags: []
 						};
+
 					}
 					self.inLoading = false;
 				});
@@ -99,21 +100,31 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 
 	};
 
 	self.update = function(){
+		var uploadImgUrl = API_HOST + 'product-upload/';
 
 		self.validForm(function(hasError){
 
 			if(!hasError){
 				// if dont have any error
 				self.inLoading = true;
-				
+
 				$http.put(API_HOST + 'product/'+self.product._id, self.product ).then(function(res){
-					self.uploadProductImg();
+
+					var filesToUpload = self.product.files;
+
+					if(filesToUpload){
+						angular.forEach(filesToUpload, function(file){
+							fileUploadProduct.uploadFileToUrl(file, self.product._id, uploadImgUrl);
+							console.log("upload_img");
+						});
+					}
 
 					if(res.data.message){
 						self.messageError = "Produto alterado com sucesso!";
 						self.product = res.data.result;
 					}
 					self.inLoading = false;
+
 				});
 			}
 		});
@@ -189,44 +200,48 @@ app.controller('ProductCtrl', ['$location','$routeParams', '$cookies', '$http', 
 		}
 	};
 
-	self.uploadProductImg = function() {
 
-  		if (self.product.files) {
-  			var files = self.product.files;
+	// self.uploadProductImg = function() {
 
-  			angular.forEach(files, function(file){
+ //  		if (self.product.files) {
+ //  			var files = self.product.files;
 
-  				file.upload = Upload.upload({
-		            url: API_HOST + 'product-upload/',
-		            data: { file_uploaded: file, 'product_id': self.product._id }
-		        });
+ //  			angular.forEach(files, function(file){
 
-		        file.upload.then(function (res) {
+ //  				file.upload = Upload.upload({
+	// 	            url: API_HOST + 'product-upload/',
+	// 	            data: { file_uploaded: file, 'product_id': self.product._id },
+	// 	            headers: {
+ //            			'x-access-token': $http.defaults.headers.common['x-access-token'];
+ //            		}
+	// 	        });
 
-		        	$timeout(function(){
-			            console.log('Success ' + res.config.data.file_uploaded.name + 'uploaded. Response: ' + res.data);
-                    });
+	// 	        file.upload.then(function (res) {
 
-		        }, function (res) {
+	// 	        	$timeout(function(){
+	// 		            console.log('Success ' + res.config.data.file_uploaded.name + 'uploaded. Response: ' + res.data);
+ //                    });
 
-		            console.log('Error status: ' + res.status);
+	// 	        }, function (res) {
 
-		        }, function (evt) {
-		            file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total)) + "%";
+	// 	            console.log('Error status: ' + res.status);
 
-		        });
+	// 	        }, function (evt) {
+	// 	            file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total)) + "%";
 
-  			});
-      	}
+	// 	        });
 
-    };
+ //  			});
+ //      	}
+
+ //    };
 
     self.checkFiles = function($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event){
     	self.product.files.forEach(function(el, idx){
     		el.progress = 0;
     		self.previewUploadImages.push(el);
     	});
-    	console.log(self.previewUploadImages);
+    	// console.log(self.previewUploadImages);
 	};
 
     self.removePreview = function(previewIndex){

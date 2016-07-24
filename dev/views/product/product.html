@@ -48,13 +48,17 @@
 				</div>
 			</div>
 			<div id="new-product-form">
-				<form class="card-container" ng-submit="singleProduct.update()">
+				<form class="card-container" ng-submit="singleProduct.update()" enctype="multipart/form-data">
 					<div>
 						<img src="images/loading.gif" alt="" class='loading-gif' ng-show="singleProduct.inLoading">
 						<p ng-class='{ alert_success : singleProduct.messageError }'>
 							{{ singleProduct.messageError }}
 						</p>
 					</div>
+					<!-- <p>
+						arquivos:
+						{{ singleProduct.product.images }}
+					</p> -->
 
 					<div class="form-group" ng-class="{ error_input: singleProduct.product_name_error }">
 						<label>Nome:</label>
@@ -127,7 +131,8 @@
 					</div>
 
 					<div class="row-simple">
-						<div class="form-group half-col">
+
+						<!-- <div class="form-group half-col">
 						    <div class="upload-button text-center" 
 						    ngf-select 
 						    ng-model="singleProduct.product.files" 
@@ -139,7 +144,10 @@
 						    ngf-min-height="15" 
 						    ngf-max-files="30">
 						    Selecionar Arquivos</div>
-						</div>
+						</div> -->
+
+						<input type="file" file-model="singleProduct.product.files" multiple>
+
 						<div class="form-group text-right half-col">
 							<button type="submit">Salvar</button>
 						</div>

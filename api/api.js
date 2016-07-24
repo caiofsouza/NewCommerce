@@ -33,7 +33,7 @@ var Order = require('./models/OrderModel');
 app.use(function (req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization,X-ACCESS-TOKEN');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization,X-ACCESS-TOKEN,Accept,Origin');
 	res.setHeader('Access-Control-Allow-Credentials', true);
 	res.setHeader('Content-Type','application/json');
 	next();
@@ -400,19 +400,24 @@ router.route('/login')
 
 router.post('/product-upload', function (req, res) {
 	var form = new formidable.IncomingForm();
+	
 	var notAllowSpecialChars = /\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\[|\{|\]|\}|\||\\|\'|\<|\,|\>|\?|\/|\""|\;|\:|\_|\s/g;
 
 	form.parse(req, function(err, fields, archive) {
 
-		var image = archive.file_uploaded;
+		var image = archive.file;
 		var image_upload_path_old = image.path;
 		var image_upload_path_new = '../public/images/';
 
-		var image_upload_name = fields.product_id + '-' + moment() + '-' + 
-							image.name.replace(notAllowSpecialChars, '').toLowerCase();
+		var regex_ext = /(\.\w+)$/g;
+		var matchs_ext = image.name.match(regex_ext);
+		var extension = matchs_ext[0];
+
+		var image_upload_name = fields.product_id + '-' + moment() + extension;
 
 		var image_upload_path_name = image_upload_path_new + image_upload_name;
 
+		console.log(image_upload_path_name);
 		
 		if (fs.existsSync(image_upload_path_new)) {
 			fs.rename(
@@ -423,6 +428,8 @@ router.post('/product-upload', function (req, res) {
 						res.json({message: "Error: "+err, error: true});
 					}
 				});
+
+			// console.log('if sync');	
 		}else {
 			fs.mkdir(image_upload_path_new, function (err) {
 				if (err) {
@@ -435,6 +442,8 @@ router.post('/product-upload', function (req, res) {
 						function(err) {
 							res.json({message: "Error: "+err, error: true});
 						});
+
+					// console.log('else sync');
 				}
 			});
 		}
