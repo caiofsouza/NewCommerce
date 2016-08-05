@@ -1,5 +1,5 @@
-app.controller("CategoriesCtrl", ['$scope', '$cookies', '$location', '$http',
-	function($scope, $cookies, $location, $http){
+app.controller("CategoriesCtrl", ['$cookies', '$location', '$http',
+	function($cookies, $location, $http){
 	var self = this;
 
 	// user var to load header infos

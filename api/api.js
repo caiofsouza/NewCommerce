@@ -5,6 +5,7 @@ var jwt = require('jwt-simple');
 var moment = require('moment');
 var fs = require('fs');
 var formidable = require('formidable');
+var mv = require('mv');
 
 var app = express();
 
@@ -43,6 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;
+process.env.TMPDIR = '/tmp';
 
 var router = express.Router();
 
@@ -417,33 +419,24 @@ router.post('/product-upload', function (req, res) {
 
 		var image_upload_path_name = image_upload_path_new + image_upload_name;
 
-		console.log(image_upload_path_name);
+		// console.log(image_upload_path_old, image_upload_path_name);
 		
 		if (fs.existsSync(image_upload_path_new)) {
-			fs.rename(
-				image_upload_path_old,
-				image_upload_path_name,
-				function (err) {
-					if (err) {
-						res.json({message: "Error: "+err, error: true});
-					}
-				});
+			mv(image_upload_path_old, image_upload_path_name, function(err) {
+				res.json({message: "Error: "+err, error: true});
+			});
 
 			// console.log('if sync');	
 		}else {
+			// console.log('else sync');
+
 			fs.mkdir(image_upload_path_new, function (err) {
 				if (err) {
 					res.json({message: "Error: "+err, error: true});
 				}else{
-
-					fs.rename(
-						image_upload_path_old,
-						image_upload_path_name,
-						function(err) {
-							res.json({message: "Error: "+err, error: true});
-						});
-
-					// console.log('else sync');
+					mv(image_upload_path_old, image_upload_path_name, function(err) {
+						res.json({message: "Error: "+err, error: true});
+					});
 				}
 			});
 		}

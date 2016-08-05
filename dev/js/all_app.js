@@ -347,8 +347,8 @@ app.controller('BannersCtrl', ['$cookies', '$location', '$http',
 
 	
 }]);
-app.controller("CategoriesCtrl", ['$scope', '$cookies', '$location', '$http',
-	function($scope, $cookies, $location, $http){
+app.controller("CategoriesCtrl", ['$cookies', '$location', '$http',
+	function($cookies, $location, $http){
 	var self = this;
 
 	// user var to load header infos
@@ -464,6 +464,17 @@ app.controller("CategoriesCtrl", ['$scope', '$cookies', '$location', '$http',
 	};
 
 }]);
+// app.controller("HeaderCtrl", ['$cookies', '$location', '$http', 
+// 	function($cookies, $location, $http){
+// 	var self = this;
+
+// 	self.user = JSON.parse($cookies.get('api_auth')).user;
+
+// 	self.logout = function(){
+// 		$cookies.remove('api_auth');
+// 		$location.path('/login');
+// 	};
+// }]);
 app.controller('HomeCtrl', ['$cookies', '$location',
 	function($cookies, $location){
 	var self = this;

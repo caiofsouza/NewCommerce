@@ -13,6 +13,7 @@
     "mongoose": "^4.4.16",
     "bcrypt": "~0.8.6",
     "multer": "~1.1.0",
-    "formidable": "~1.0.17"
+    "formidable": "~1.0.17",
+    "mv": "~2.1.1"
   }
 }
